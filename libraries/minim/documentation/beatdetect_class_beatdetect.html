@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : BeatDetect</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">BeatDetect</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">The BeatDetect class allows you to analyze an audio stream for beats (rhythmic onsets). 
+ <a href="http://www.gamedev.net/reference/programming/features/beatdetection">Beat
+ Detection Algorithms</a> by Frederic Patin describes beats in the following
+ way: <blockquote> The human listening system determines the rhythm of music
+ by detecting a pseudo periodical succession of beats. The signal which is
+ intercepted by the ear contains a certain energy, this energy is converted
+ into an electrical signal which the brain interprets. Obviously, The more
+ energy the sound transports, the louder the sound will seem. But a sound will
+ be heard as a <em>beat</em> only if his energy is largely superior to the
+ sound's energy history, that is to say if the brain detects a
+ <em>brutal variation in sound energy</em>. Therefore if the ear intercepts
+ a monotonous sound with sometimes big energy peaks it will detect beats,
+ however, if you play a continuous loud sound you will not perceive any beats.
+ Thus, the beats are big variations of sound energy. </blockquote> In fact,
+ the two algorithms in this class are based on two algorithms described in
+ that paper.
+ <p>
+ To use this class, inside of <code>draw()</code> you must first call
+ <code>detect()</code>, passing the <code>AudioBuffer</code> you want to
+ analyze. You may then use the <code>isXXX</code> functions to find out what
+ beats have occurred in that frame. For example, you might use
+ <code>isKick()</code> to cause a circle to pulse.
+ <p>
+ BeatDetect has two modes: sound energy tracking and frequency energy
+ tracking. In sound energy mode, the level of the buffer, as returned by
+ <code>level()</code>, is used as the instant energy in each frame. Beats,
+ then, are spikes in this value, relative to the previous one second of sound.
+ In frequency energy mode, the same process is used but instead of tracking
+ the level of the buffer, an FFT is used to obtain a spectrum, which is then
+ divided into average bands using <code>logAverages()</code>, and each of
+ these bands is tracked individually. The result is that it is possible to
+ track sounds that occur in different parts of the frequency spectrum
+ independently (like the kick drum and snare drum).
+ <p>
+ In sound energy mode you use <code>isOnset()</code> to query the algorithm
+ and in frequency energy mode you use <code>isOnset(int i)</code>,
+ <code>isKick()</code>, <code>isSnare()</code>, and
+ <code>isRange()</code> to query particular frequnecy bands or ranges of
+ frequency bands. It should be noted that <code>isKick()</code>,
+ <code>isSnare()</code>, and <code>isHat()</code> merely call
+ <code>isRange()</code> with values determined by testing the algorithm
+ against music with a heavy beat and they may not be appropriate for all kinds
+ of music. If you find they are performing poorly with your music, you should
+ use <code>isRange()</code> directly to locate the bands that provide the
+ most meaningful information for you.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/**
+  * This sketch demonstrates how to use the BeatDetect object song SOUND_ENERGY mode.&lt;br />
+  * You must call &lt;code>detect&lt;/code> every frame and then you can use &lt;code>isOnset&lt;/code>
+  * to track the beat of the music.
+  * &lt;p>
+  * This sketch plays an entire song, so it may be a little slow to load.
+  * &lt;p>
+  * For more information about Minim and additional features, 
+  * visit http://code.compartmental.net/minim/
+  */
+  
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+
+Minim minim;
+AudioPlayer song;
+BeatDetect beat;
+
+float eRadius;
+
+void setup()
+{
+  size(200, 200, P3D);
+  minim = new Minim(this);
+  song = minim.loadFile("marcus_kellis_theme.mp3", 2048);
+  song.play();
+  // a beat detection object song SOUND_ENERGY mode with a sensitivity of 10 milliseconds
+  beat = new BeatDetect();
+  
+  ellipseMode(RADIUS);
+  eRadius = 20;
+}
+
+void draw()
+{
+  background(0);
+  beat.detect(song.mix);
+  float a = map(eRadius, 20, 80, 60, 255);
+  fill(60, 255, 0, a);
+  if ( beat.isOnset() ) eRadius = 80;
+  ellipse(width/2, height/2, eRadius, eRadius);
+  eRadius *= 0.95;
+  if ( eRadius &lt; 20 ) eRadius = 20;
+}
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre>BeatDetect();
+BeatDetect(timeSize, sampleRate);
+</pre></td>
+  </tr>
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>timeSize</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: the size of the buffer</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>sampleRate</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the sample rate of the samples in the buffer</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_field_freq_energy.html">FREQ_ENERGY</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Constant used to request frequency energy tracking mode.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_field_sound_energy.html">SOUND_ENERGY</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Constant used to request sound energy tracking mode.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_dectectsize.html">dectectSize ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In frequency energy mode this returns the number of frequency bands 
+ currently being used. In sound energy mode this always returns 0.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_detect.html">detect ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Analyze the samples in <code>buffer</code>. 
+ This is a cumulative process, so you must call this function every frame.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_detectmode.html">detectMode ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the object to use the requested algorithm. If an invalid value is
+ passed, the function will report and error and default to
+ BeatDetect.SOUND_ENERGY<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_getdetectcenterfrequency.html">getDetectCenterFrequency ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the center frequency of the i<sup>th</sup> frequency band.
+ In sound energy mode this always returns 0.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_ishat.html">isHat ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In frequency energy mode this returns true if a beat corresponding to the
+ frequency range of a hi hat has been detected. This has been tuned to work
+ well with dance / techno music and may not perform well with other styles
+ of music. In sound energy mode this always returns false.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_iskick.html">isKick ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In frequency energy mode this returns true if a beat corresponding to the
+ frequency range of a kick drum has been detected. This has been tuned to
+ work well with dance / techno music and may not perform well with other
+ styles of music. In sound energy mode this always returns false.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_isonset.html">isOnset ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In sound energy mode this returns true when a beat has been detected. In
+ frequency energy mode this always returns false.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_isrange.html">isRange ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In frequency energy mode this returns true if at least
+ <code>threshold</code> bands of the bands included in the range
+ <code>[low, high]</code> have registered a beat. In sound energy mode
+ this always returns false.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_issnare.html">isSnare ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>In frequency energy mode this returns true if a beat corresponding to the
+ frequency range of a snare drum has been detected. This has been tuned to
+ work well with dance / techno music and may not perform well with other
+ styles of music. In sound energy mode this always returns false.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="beatdetect_method_setsensitivity.html">setSensitivity ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the sensitivity of the algorithm. After a beat has been detected, the
+ algorithm will wait for <code>millis</code> milliseconds before allowing
+ another beat to be reported. You can use this to dampen the algorithm if
+ it is giving too many false-positives. The default value is 10, which is
+ essentially no damping. If you try to set the sensitivity to a negative
+ value, an error will be reported and it will be set to 10 instead.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"></td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : EnvelopeFollower</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">EnvelopeFollower</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">An EnvelopeFollower will analyze the audio coming into it and output a value that reflects 
+ the volume level of that audio. It is similar to what AudioBuffer's level method provides, 
+ but has the advantage of being able to be inserted into the signal chain anywhere.
+ 
+ You may find that you are only interested in the output value of the EnvelopeFollower for 
+ visualization purposes, in which case you can use a Sink UGen to tick the EnvelopeFollower
+ without generating any sound. The following example demonstrates this technique.
+ 
+ We still consider EnveloperFollower to be a bit experimental, so YMMV.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/**
+  * This sketch demonstrates how to use an EnvelopeFollower, which will 
+  * analyze the audio coming into it and output a value that reflects 
+  * the volume level of that audio. It is similar to what AudioBuffer's 
+  * level method provides, but has the advantage of being able to be 
+  * inserted into the signal chain anywhere.
+  * &lt;p>
+  * This sketch also demonstrates using a Sink UGen, which can have 
+  * many UGens patched to it, like a Summer, but that generates silence.
+  * It is used here because we need a way to tick the EnvelopeFollower
+  * but we are not interested in hearing the output of the EnvelopeFollower.
+  * &lt;p>
+  * For more information about Minim and additional features,&lt;br/>
+  * visit http://code.compartmental.net/minim/
+  */
+
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+
+Minim             minim;
+AudioOutput       out;
+Oscil             wave;
+Oscil             mod;
+EnvelopeFollower envFollow;
+
+void setup()
+{
+  size(512, 200, P3D);
+  
+  minim = new Minim(this);
+  
+  // use the getLineOut method of the Minim object to get an AudioOutput object
+  out = minim.getLineOut();
+  
+  // create a triangle wave Oscil, set to 440 Hz, at 1.0 amplitude
+  // in this case, the amplitude we construct the Oscil with 
+  // doesn't matter because we will be patching something to
+  // its amplitude input.
+  wave = new Oscil( 440, 1.0f, Waves.TRIANGLE );
+ 
+  // create a sine wave Oscil for modulating the amplitude of wave
+  mod  = new Oscil( 2, 0.4f, Waves.SINE );
+ 
+  // connect up the modulator
+  mod.patch( wave.amplitude );
+  
+  // patch wave to the output
+  wave.patch( out );
+  
+  // now create an envelope follower to show the level of the wave
+  
+  envFollow = new EnvelopeFollower( 0,   // attack time in seconds
+                                    0.1, // release time in seconds
+                                    1024 // size of buffer to analyze 
+                                  );
+  
+  // a sink to tick the envelope follower because 
+  // we won't use the output of it in the signal chain
+  Sink sink = new Sink();
+  wave.patch( envFollow ).patch( sink ).patch( out );
+}
+
+void draw()
+{
+  // adjust the modulator amplitude based on mouseY
+  // this should mean that when the modulator has 
+  // a high amplitude that the envelope follower 
+  // will report a larger range of values
+  float amp = constrain( map( mouseY, 0, height, 1, 0), 0, 1 );
+  mod.amplitude.setLastValue( amp );
+  
+  // and we can connect the frequency of modulation to mouseX
+  // and see the result of that in the follower, as well
+  float freq = constrain( map( mouseX, 0, width, 0.1, 1 ), 0.1, 1 );
+  mod.frequency.setLastValue( freq );
+  
+  background(0);
+  stroke(0);
+  fill(255);
+  
+  // draw the output of the envelope follower
+  float h = envFollow.getLastValues()[0] * height;
+  rect( 0, height - h, width, height );
+}
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre>EnvelopeFollower(attackInSeconds, releaseInSeconds, bufferSize);
+</pre></td>
+  </tr>
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>attackInSeconds</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: how many seconds the follower should take to ramp up to a higher value</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>releaseInSeconds</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: how many seconds the follower should take to ramp down to a lower value</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>bufferSize</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: how many samples should be analyzed at once. smaller buffers will make
+ 				 the follower more responsive.</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_field_audio.html">audio</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Where incoming audio is patched.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_channelcount.html">channelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the number of channels this UGen has been configured to generate.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_getlastvalues.html">getLastValues ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the last values generated by this UGen. This will most often be
+ used by sub-classes when pulling data from their inputs.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_patch.html">patch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Send the output of this UGen to another UGen, UGenInput, or AudioOutput.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_printinputs.html">printInputs ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Prints all inputs connected to this UGen (for debugging)<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_samplerate.html">sampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the sample rate of this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_setchannelcount.html">setChannelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Let this UGen know how many channels of audio you will be asking it for.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_setsamplerate.html">setSampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the sample rate for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_tick.html">tick ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Generates one sample frame for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="envelopefollower_method_unpatch.html">unpatch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Unpatch this UGen from an AudioOutput or other UGen.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="ugen_class_ugen.html">UGen</A><BR>
+</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

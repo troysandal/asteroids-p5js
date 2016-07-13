@@ -1,0 +1,326 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : Flanger</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">Flanger</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">A Flanger is a specialized kind of delay that uses an LFO (low frequency
+ oscillator) to vary the amount of delay applied to each sample. This causes a
+ sweeping frequency kind of sound as the signal reinforces or cancels itself
+ in various ways. In particular the peaks and notches created in the frequency
+ spectrum are related to each other in a linear harmonic series. This causes
+ the spectrum to look like a comb.
+ <p>
+ Inputs for the Flanger are:
+ <ul>
+ <li>delay (in milliseconds): the minimum amount of delay applied to an incoming sample</li>
+ <li>rate (in Hz): the frequency of the LFO</li>
+ <li>depth (in milliseconds): the maximum amount of delay added onto delay by the LFO</li>
+ <li>feedback: how much of delayed signal should be fed back into the effect</li>
+ <li>dry: how much of the uneffected input should be included in the output</li>
+ <li>wet: how much of the effected signal should be included in the output</li>
+ </ul>
+ <p>
+ A more thorough description can be found on wikipedia:
+ http://en.wikipedia.org/wiki/Flanging
+ <p></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/* flangerExample
+   &lt;p>
+   A Flanger is a specialized kind of delay that uses an LFO (low frequency oscillator) 
+   to vary the amount of delay applied to each sample. This causes a sweeping frequency 
+   kind of sound as the signal reinforces or cancels itself in various ways. In particular
+   the peaks and notches created in the frequency spectrum are related to each other in 
+   a linear harmonic series. This causes the spectrum to look like a comb and should be
+   apparent in the visualization.
+   &lt;p>
+   Inputs for the Flanger are:
+   &lt;ul>
+   &lt;li>delay (in milliseconds): the minimum amount of delay applied to an incoming sample&lt;/li>
+   &lt;li>rate (in Hz): the frequency of the LFO&lt;/li>
+   &lt;li>depth (in milliseconds): the maximum amount of delay added onto delay by the LFO&lt;/li>
+   &lt;li>feedback: how much of delayed signal should be fed back into the effect&lt;/li>
+   &lt;li>dry: how much of the uneffected input should be included in the output&lt;/li>
+   &lt;li>wet: how much of the effected signal should be included in the output&lt;/li>
+   &lt;/ul>
+   &lt;p>
+   A more thorough description can be found on wikipedia: http://en.wikipedia.org/wiki/Flanging
+   &lt;p>
+   For more information about Minim and additional features, 
+   visit http://code.compartmental.net/minim/
+   &lt;p>
+   Author: Damien Di Fede
+*/
+
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+import ddf.minim.analysis.*;
+
+Minim       minim;
+AudioOutput out;
+Noise       noize;
+Flanger     flange;
+
+// we render the spectrum instead of the waveform
+// because this lets you really see what the Flanger is doing.
+FFT         fft;
+
+void setup()
+{
+  size( 512, 512 );
+  
+  minim = new Minim(this);
+  out   = minim.getLineOut();
+  
+  // we use white noise to demonstrate the Flanger effect
+  // because the sound of the Flanger is more 
+  // pronounced when the audio being flanged 
+  // has high frequency content
+  noize = new Noise( Noise.Tint.WHITE );
+  
+  flange = new Flanger( 1,     // delay length in milliseconds ( clamped to [0,100] )
+                        0.2f,   // lfo rate in Hz ( clamped at low end to 0.001 )
+                        1,     // delay depth in milliseconds ( minimum of 0 )
+                        0.5f,   // amount of feedback ( clamped to [0,1] )
+                        0.5f,   // amount of dry signal ( clamped to [0,1] )
+                        0.5f    // amount of wet signal ( clamped to [0,1] )
+                       );
+                        
+  noize.patch( flange ).patch( out );
+  
+  fft = new FFT( 1024, out.sampleRate() );
+}
+
+void draw()
+{
+  background( 0 );
+  
+  stroke( 200 );
+  
+  fft.forward( out.mix );
+  
+  for( int i = 0; i &lt; fft.specSize(); ++i )
+  {
+    float val = fft.getBand( i );
+    line( i, height, i, height - pow ( 10.0, (0.05 * val) )*2 );
+  }
+  
+  fill( 255 );
+  
+  text( "delay: " + nf( flange.delay.getLastValue(), 1, 3 ) + " ms", 5, 15 );
+  text( "depth: " + nf( flange.depth.getLastValue(), 1, 3 ) + " ms", 5, 30 );
+}
+
+void mouseMoved()
+{
+  flange.delay.setLastValue( map( mouseX, 0,      width, 0.01, 5 ) );
+  flange.depth.setLastValue( map( mouseY, height, 0,     1.00, 5 ) );
+}
+
+
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre>Flanger(delayLength, lfoRate, delayDepth, feedbackAmplitude, dryAmplitude, wetAmplitude);
+</pre></td>
+  </tr>
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>delayLength</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the minimum delay applied to incoming samples (in milliseconds)</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>lfoRate</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the frequency of the the LFO</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>delayDepth</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the maximum amount added to the delay by the LFO (in milliseconds)</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>feedbackAmplitude</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the amount of the flanged signal fed back into the effect</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>dryAmplitude</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the amount of incoming signal added to the output</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>wetAmplitude</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the amount of the flanged signal added to the output</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_audio.html">audio</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Where the input goes.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_delay.html">delay</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>How much does the flanger delay the incoming signal. Used as the low
+ value of the modulated delay amount.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_depth.html">depth</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>How many milliseconds the LFO increases the delay by at the maximum.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_dry.html">dry</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>How much of the dry signal is added to the output.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_feedback.html">feedback</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>How much of the flanged signal is fed back into the effect.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_rate.html">rate</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The frequency of the LFO applied to the delay.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_field_wet.html">wet</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>How much of the flanged signal is added to the output.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_channelcount.html">channelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the number of channels this UGen has been configured to generate.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_getlastvalues.html">getLastValues ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the last values generated by this UGen. This will most often be
+ used by sub-classes when pulling data from their inputs.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_patch.html">patch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Send the output of this UGen to another UGen, UGenInput, or AudioOutput.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_printinputs.html">printInputs ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Prints all inputs connected to this UGen (for debugging)<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_samplerate.html">sampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the sample rate of this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_setchannelcount.html">setChannelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Let this UGen know how many channels of audio you will be asking it for.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_setsamplerate.html">setSampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the sample rate for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_tick.html">tick ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Generates one sample frame for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="flanger_method_unpatch.html">unpatch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Unpatch this UGen from an AudioOutput or other UGen.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="ugen_class_ugen.html">UGen</A><BR>
+</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

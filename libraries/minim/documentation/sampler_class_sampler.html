@@ -1,0 +1,389 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : Sampler</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">Sampler</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">Sampler is the UGen version of AudioSample and is
+ the preferred method of triggering short audio files. 
+ You will also find Sampler much more flexible,
+ since it provides ways to trigger only part of a sample, and 
+ to trigger a sample at different playback rates. Also, unlike AudioSample,
+ a Sampler lets you specify how many voices (i.e. simultaneous 
+ playbacks of the sample) should have.
+ <p>
+ Sampler provides several inputs that allow you to control the properties
+ of a triggered sample. When you call the trigger method, the values of these 
+ inputs are "snapshotted" and used to configure the new voice that will play 
+ the sample. So, changing the values does not effect already playing voices,
+ except for <code>amplitude</code>, which controls the volume of the Sampler 
+ as a whole.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>import processing.opengl.*;
+
+/**
+  * This sketch is a more involved use of AudioSamples to create a simple drum machine. 
+  * Click on the buttons to toggle them on and off. The buttons that are on will trigger 
+  * samples when the beat marker passes over their column. You can change the tempo by 
+  * clicking in the BPM box and dragging the mouse up and down.
+  * &lt;p>
+  * We achieve the timing by using AudioOutput's playNote method and a cleverly written Instrument.
+  * &lt;p>
+  * For more information about Minim and additional features, 
+  * visit http://code.compartmental.net/minim/
+  */
+
+
+import controlP5.*;
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+
+Minim       minim;
+AudioOutput out;
+
+Sampler     kick;
+Sampler     snare;
+Sampler     hat;
+
+ControlP5 gui;
+boolean[] hatRow = new boolean[16];
+boolean[] snrRow = new boolean[16];
+boolean[] kikRow = new boolean[16];
+
+public int bpm;
+
+int beat; // which beat we're on
+
+// here's an Instrument implementation that we use 
+// to trigger Samplers every sixteenth note. 
+// Notice how we get away with using only one instance
+// of this class to have endless beat making by 
+// having the class schedule itself to be played
+// at the end of its noteOff method. 
+class Tick implements Instrument
+{
+  void noteOn( float dur )
+  {
+    if ( hatRow[beat] ) hat.trigger();
+    if ( snrRow[beat] ) snare.trigger();
+    if ( kikRow[beat] ) kick.trigger();
+  }
+  
+  void noteOff()
+  {
+    // next beat
+    beat = (beat+1)%16;
+    // set the new tempo
+    out.setTempo( bpm );
+    // play this again right now, with a sixteenth note duration
+    out.playNote( 0, 0.25f, this );
+  }
+}
+
+void setup()
+{
+  size(395, 200, OPENGL);
+  minim = new Minim(this);
+  out   = minim.getLineOut();
+  
+  // load all of our samples, using 4 voices for each.
+  // this will help ensure we have enough voices to handle even
+  // very fast tempos.
+  kick  = new Sampler( "BD.wav", 4, minim );
+  snare = new Sampler( "SD.wav", 4, minim );
+  hat   = new Sampler( "CHH.wav", 4, minim );
+  
+  // patch samplers to the output
+  kick.patch( out );
+  snare.patch( out );
+  hat.patch( out );
+  
+  gui = new ControlP5(this);
+  gui.setColorForeground(color(128, 200));
+  gui.setColorActive(color(255, 0, 0, 200));
+  Toggle h;
+  Toggle s;
+  Toggle k;
+  for (int i = 0; i &lt; 16; i++)
+  {
+    h = gui.addToggle("hat" + i, false, 10+i*24, 50, 14, 30);
+    h.setId(i);
+    h.setLabel("hat");
+    s = gui.addToggle("snr" + i, false, 10+i*24, 100, 14, 30);
+    s.setId(i);
+    s.setLabel("snr");
+    k = gui.addToggle("kik" + i, false, 10+i*24, 150, 14, 30);
+    k.setId(i);
+    k.setLabel("kik");
+  }
+  gui.addNumberbox("bpm", 120, 10, 5, 20, 15);
+  bpm = 120;
+  beat = 0;
+  
+  // start the sequencer
+  out.setTempo( bpm );
+  out.playNote( 0, 0.25f, new Tick() );
+  
+  textFont(createFont("Arial", 16));
+}
+
+void draw()
+{
+  background(0);
+  fill(255);
+  //text(frameRate, width - 60, 20);
+  
+  stroke(128);
+  if ( beat % 4 == 0 )
+  {
+    fill(200, 0, 0);
+  }
+  else
+  {
+    fill(0, 200, 0);
+  }
+    
+  // beat marker    
+  rect(10+beat*24, 35, 14, 9);
+  
+  gui.draw();
+}
+
+public void controlEvent(ControlEvent e)
+{
+  println(e.getController().getLabel() + ": " + e.controller().value());
+  if ( e.controller().getLabel() == "hat" )
+  {
+    hatRow[ e.controller().id() ] = e.controller().value() == 0.0 ? false : true;
+  }
+  else if ( e.controller().getLabel() == "snr" )
+  {
+    snrRow[ e.controller().id() ] = e.controller().value() == 0.0 ? false : true;
+  }
+  else if ( e.controller().getLabel() == "kik" )
+  {
+    kikRow[ e.controller().id() ] = e.controller().value() == 0.0 ? false : true;
+  }
+}
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre>Sampler(filename, maxVoices, system);
+Sampler(sampleData, sampleRate, maxVoices);
+</pre></td>
+  </tr>
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>filename</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>String: the file to load</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>maxVoices</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: the maximum number of voices for this Sampler</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>system</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Minim: the instance of Minim to use for loading the file</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>sampleData</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>MultiChannelBuffer: the sample data this Sampler will use to generate sound</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>sampleRate</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float: the sample rate of the sampleData</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_amplitude.html">amplitude</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The amplitude of this Sampler. This acts as an
+ overall volume control. So changing the amplitude
+ will effect all currently active voices.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_attack.html">attack</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The attack time, in seconds, when triggering 
+ this Sampler. Attack time is used to ramp up 
+ the amplitude of the voice. By default it 
+ is 0 seconds.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_begin.html">begin</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The sample number in the source sample 
+ the voice will start at when triggering this Sampler.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_end.html">end</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The sample number in the source sample 
+ the voice will end at when triggering this Sampler.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_looping.html">looping</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Whether triggered voices should loop or not.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_field_rate.html">rate</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The playback rate used when triggering this Sampler.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_channelcount.html">channelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the number of channels this UGen has been configured to generate.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_getlastvalues.html">getLastValues ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the last values generated by this UGen. This will most often be
+ used by sub-classes when pulling data from their inputs.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_patch.html">patch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Send the output of this UGen to another UGen, UGenInput, or AudioOutput.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_printinputs.html">printInputs ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Prints all inputs connected to this UGen (for debugging)<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_samplerate.html">sampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the sample rate of this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_setchannelcount.html">setChannelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Let this UGen know how many channels of audio you will be asking it for.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_setsample.html">setSample ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the sample data used by this Sampler by <em>copying</em> the 
+ contents of the provided MultiChannelBuffer into the internal buffer.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_setsamplerate.html">setSampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the sample rate for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_stop.html">stop ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Stop all active voices. In other words,
+ immediately silence this Sampler.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_tick.html">tick ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Generates one sample frame for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_trigger.html">trigger ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Trigger this Sampler.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="sampler_method_unpatch.html">unpatch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Unpatch this UGen from an AudioOutput or other UGen.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="audiosample_class_audiosample.html">AudioSample</A><BR>
+<A href="ugen_class_ugen.html">UGen</A><BR>
+</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

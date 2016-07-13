@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : Vocoder</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">Vocoder</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">Vocoder is a UGen that performs very basic <a href="http://en.wikipedia.org/wiki/Vocoder">vocoding</a>.
+ It works by analyzing the audio input and the modulator input with FFTs and then multiplying 
+ the audio input's spectrum by the modulator's spectrum.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/* liveInputExample&lt;br/>
+   is an example of using a Vocoder UGen on a LiveInput UGen.
+   This should let you hear the input from your microphone turned into a robot voice.
+   &lt;p>
+   For more information about Minim and additional features, 
+   visit http://code.compartmental.net/minim/
+   &lt;p>
+   author: Damien Di Fede
+*/
+
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+import ddf.minim.spi.*; // for AudioStream
+
+Minim minim;
+AudioOutput out;
+LiveInput in;
+
+void setup()
+{
+  // initialize the drawing window
+  size(512, 200);
+  
+  // initialize the minim and out objects
+  minim = new Minim(this);
+  out = minim.getLineOut();
+  
+  // construct a LiveInput by giving it an InputStream from minim.
+  // we ask for an input with the same audio properties as the output.
+  AudioStream inputStream = minim.getInputStream( Minim.MONO, 
+                                                  out.bufferSize(), 
+                                                  out.sampleRate(), 
+                                                  out.getFormat().getSampleSizeInBits()
+                                                 );
+  in = new LiveInput( inputStream );
+  
+  // create the vocoder with a 1024 sample frame FFT and 3 overlapping windows
+  Vocoder vocode = new Vocoder( 1024, 8 );
+  
+  // patch the input into the vocoder modulator
+  // we want to modulate the synth sound with the mic input, to create that "robot" effect
+  in.patch( vocode.modulator );
+  
+  // create a synth with two notes an octave apart
+  Oscil wave1 = new Oscil( 110, 0.8, Waves.SAW ); 
+  Oscil wave2 = new Oscil( 220, 0.4, Waves.SAW );
+  
+  Summer synth = new Summer();
+  wave1.patch( synth );
+  wave2.patch( synth );
+  
+  // patch it to the input on the vocoder and on to the output 
+  synth.patch( vocode ).patch( out );
+}
+
+// draw is run many times
+void draw()
+{
+  // erase the window to black
+  background( 0 );
+  // draw using a white stroke
+  stroke( 255 );
+  // draw the waveforms
+  for( int i = 0; i &lt; out.bufferSize() - 1; i++ )
+  {
+    // find the x position of each buffer value
+    float x1  =  map( i, 0, out.bufferSize(), 0, width );
+    float x2  =  map( i+1, 0, out.bufferSize(), 0, width );
+    // draw a line from one buffer position to the next for both channels
+    line( x1, 50  - out.left.get(i)*50,  x2, 50  - out.left.get(i+1)*50);
+    line( x1, 150 - out.right.get(i)*50, x2, 150 - out.right.get(i+1)*50);
+  }  
+}
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre>Vocoder(windowSize, windowCount);
+</pre></td>
+  </tr>
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>windowSize</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: the number of sample frames to use for 
+ 				 each FFT analysis. Smaller window sizes 
+ 				 will have better performance, but lower
+ 				 sound quality. the window size must also 
+ 				 be a power of two, which is a requirement 
+ 				 for using an FFT.</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>windowCount</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: the number of overlapping windows to use. 
+ 				 this must be at least 1 with larger values
+ 				 causing the analysis windows to overlap 
+ 				 with each other to a greater degree.
+ 				 For instance, with a windowSize of 1024 and 
+ 				 a windowCount of 2, a 1024 sample frame FFT 
+ 				 will be calculated every 512 sample frames. 
+ 				 With 3 windows, every 341 samples, and so forth.
+ 				 More windows generally equates to better quality.</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="vocoder_field_audio.html">audio</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The audio you want processed by the Vocoder.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_field_modulator.html">modulator</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The signal that will be used to transform the audio input.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_channelcount.html">channelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the number of channels this UGen has been configured to generate.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_getlastvalues.html">getLastValues ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the last values generated by this UGen. This will most often be
+ used by sub-classes when pulling data from their inputs.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_patch.html">patch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Send the output of this UGen to another UGen, UGenInput, or AudioOutput.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_printinputs.html">printInputs ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Prints all inputs connected to this UGen (for debugging)<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_samplerate.html">sampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the sample rate of this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_setchannelcount.html">setChannelCount ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Let this UGen know how many channels of audio you will be asking it for.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_setsamplerate.html">setSampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the sample rate for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_tick.html">tick ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Generates one sample frame for this UGen.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="vocoder_method_unpatch.html">unpatch ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Unpatch this UGen from an AudioOutput or other UGen.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"></td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

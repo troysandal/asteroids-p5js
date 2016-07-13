@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : AudioPlayer : : skip</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="100" valign="top" class="header">
+    	<span class="libName">Minim</span><br>
+		<a href="index.html">core</a><br/>
+		<a href="index_ugens.html">ugens</a><br/>
+		<a href="index_analysis.html">analysis</a>
+	</td>
+    <td width="450" class="descList">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">skip</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/**
+  * This sketch demonstrates how to use the &lt;code>skip&lt;/code> method of a &lt;code>Playable&lt;/code> class. 
+  * The class used here is &lt;code>AudioPlayer&lt;/code>, but you can also skip an &lt;code>AudioSnippet&lt;/code>.
+  * When you skip, it is always measured from the current position of the recording. So &lt;code>skip(100)&lt;/code> will 
+  * set the "playhead" at 100 milliseconds from the current position. A sort of fast-forward. It is also possible 
+  * to skip in a negative direction. So &lt;code>skip(-200)&lt;/code> will set the "playhead" to 200 milliseconds before 
+  * the current position. Using &lt;code>skip&lt;/code> will not change the play state of &lt;code>Playable&lt;/code>, 
+  * meaning that if it was already playing it will continue playing from the new position, but if it was not playing, 
+  * skipping will not start playback, it will simply set the point at which playback will begin. 
+  * If an error occurs while trying to skip, the position will not change. 
+  * If you try to skip to a position that is less than zero or try to skip past the end of the 
+  * recording, the position will be clamped to zero or &lt;code>length()&lt;/code>. 
+  * &lt;p>
+  * Press 'f' to skip by 100 milliseconds.&lt;br />
+  * Press 'r' to skip by -500 milliseconds.
+  */
+
+import ddf.minim.*;
+
+Minim minim;
+AudioPlayer groove;
+
+void setup()
+{
+  size(512, 200, P3D);
+
+  minim = new Minim(this);
+  groove = minim.loadFile("groove.mp3", 2048);
+  groove.loop();
+}
+
+void draw()
+{
+  background(0);
+  
+  stroke(255);
+  
+  for(int i = 0; i &lt; groove.bufferSize() - 1; i++)
+  {
+    line(i, 50  + groove.left.get(i)*50,  i+1, 50  + groove.left.get(i+1)*50);
+    line(i, 150 + groove.right.get(i)*50, i+1, 150 + groove.right.get(i+1)*50);
+  }
+}
+
+void keyPressed()
+{
+  if ( key == 'f' )
+  {
+    groove.skip(100);
+  }
+  if ( key == 'r' )
+  {
+    groove.skip(-500);
+  }
+}
+
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">Skips <code>millis</code> milliseconds from the current position. 
+ <code>millis</code> can be negative, which will make this skip backwards. 
+ If the skip amount would result in a negative position or a position that is greater than 
+ <code>length()</code>, the new position will be clamped to zero or 
+ <code>length()</code>.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Syntax</td>
+    <td valign=top class="descList"><pre>skip(millis);
+</pre></td>
+  </tr>
+  <!-- begin parameters -->
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>millis</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: how many milliseconds to skip, sign indicates direction</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <!-- end parameters -->
+  <!-- begin return  -->
+  
+     <tr>
+       <td valign=top class="mainText">Returns</td>
+       <td class="descList">None</td>
+     </tr>
+   
+  <!-- end return -->
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="audioplayer_class_audioplayer.html">AudioPlayer</A><BR>
+</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="descList">&nbsp;</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : WavetableGenerator : : gen7</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="100" valign="top" class="header">
+    	<span class="libName">Minim</span><br>
+		<a href="index.html">core</a><br/>
+		<a href="index_ugens.html">ugens</a><br/>
+		<a href="index_analysis.html">analysis</a>
+	</td>
+    <td width="450" class="descList">&nbsp;</td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">gen7</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>None available</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">Generate a piecewise linear waveform given an array of sample values and the distances 
+ between them. The <code>dist</code> array should contain one value less than the <code>val</code>
+ array. The values in the <code>dist</code> array should also add up to <code>size</code>. For instance, a 
+ call like this:
+ <p>
+ <code>Wavetable table = WavetableGenerator.gen7( 4096, new float[] { 1.0, -1.0, 1.0 }, new int[] { 2048, 2048 } );</code>
+ <p>
+ Would generate a Wavetable that was 4096 samples long and the values of those samples would start at 1.0, 
+ linearly decrease to -1.0 over 2048 samples, and then increase to 1.0 over the next 2048 samples.
+ <p>
+ If you wanted to generate a triangle wavetable with 4096 samples, you'd do this:
+ <p>
+ <code>Wavetable table = WavetableGenerator.gen7( 4069, new float[] { 0.0, 1.0, 0.0, -1.0, 0.0 }, new int[] { 1024, 1024, 1024, 1024 } );</code></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Syntax</td>
+    <td valign=top class="descList"><pre>gen7(size, val, dist);
+</pre></td>
+  </tr>
+  <!-- begin parameters -->
+  
+     <tr>
+       <td class="mainText">Parameters</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="70" valign=top>size</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int: the size of the Wavetable that you want generate</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>val</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>float[]: the sample values used as control points for generating the waveform</td>
+	  </tr>
+    
+      <tr>
+        <td width="70" valign=top>dist</td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>int[]: the sample distances between control points in val</td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <!-- end parameters -->
+  <!-- begin return  -->
+  
+     <tr>
+       <td valign=top class="mainText">Returns</td>
+       <td class="descList">a Wavetable</td>
+     </tr>
+   
+  <!-- end return -->
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="wavetable_class_wavetable.html">Wavetable</A><BR>
+</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td class="descList">&nbsp;</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>

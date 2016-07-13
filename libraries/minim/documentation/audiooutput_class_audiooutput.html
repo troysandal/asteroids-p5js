@@ -1,0 +1,409 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Minim : : AudioOutput</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="stylesheet.css" rel="stylesheet" type="text/css">
+</head>
+<body> 
+<center>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="header">
+	  <span class="libName">Minim</span>
+	  <a href="index.html">core</a><br/>
+	  <a href="index_ugens.html">ugens</a><br/>
+	  <a href="index_analysis.html">analysis</a>
+	 </td> 
+    <td class="descList"></td>
+  </tr>
+  <tr>
+    <td valign="top" class="mainTextName">Name</td>
+    <td class="methodName">AudioOutput</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Description</td>
+    <td valign=top class="descList">An AudioOutput is a connection to the output of a computer's sound card. 
+ Typically the computer speakers are connected to this. 
+ You can use an AudioOutput to do real-time sound synthesis by patching 
+ UGens to an output object. You can get an AudioOutput object from Minim 
+ using one of five methods:
+ <p>
+ <pre>
+ AudioOutput getLineOut()
+ 
+ // specifiy either Minim.MONO or Minim.STEREO for type
+ AudioOutput getLineOut(int type)
+ 
+ // bufferSize is the size of the left, right,
+ // and mix buffers of the output you get back
+ AudioOutput getLineOut(int type, int bufferSize)
+ 
+ // sampleRate is a request for an output of a certain sample rate
+ AudioOutput getLineOut(int type, int bufferSize, float sampleRate)
+ 
+ // bitDepth is a request for an output with a certain bit depth
+ AudioInput getLineOut(int type, int bufferSize, float sampleRate, int bitDepth)
+ </pre>
+ <p>
+ In the event that an output doesn't exist with the requested parameters, 
+ Minim will spit out an error and return null. 
+ In general, you will want to use one of the first two methods listed above.
+ <p>
+ In addition to directly patching UGens to the output, you can also schedule 
+ "notes" to be played by the output at some time in the future. This can 
+ be very powerful when writing algorithmic music and sound. See the playNote
+ method for more information.</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Examples</td>
+    <td valign=top class="descList"><pre>/**
+  * This sketch demonstrates how to create synthesized sound with Minim 
+  * using an AudioOutput and an Oscil. An Oscil is a UGen object, 
+  * one of many different types included with Minim. By using 
+  * the numbers 1 thru 5, you can change the waveform being used
+  * by the Oscil to make sound. These basic waveforms are the 
+  * basis of much audio synthesis. 
+  * 
+  * For many more examples of UGens included with Minim, 
+  * have a look in the Synthesis folder of the Minim examples.
+  * &lt;p>
+  * For more information about Minim and additional features, 
+  * visit http://code.compartmental.net/minim/
+  */
+
+import ddf.minim.*;
+import ddf.minim.ugens.*;
+
+Minim       minim;
+AudioOutput out;
+Oscil       wave;
+
+void setup()
+{
+  size(512, 200, P3D);
+  
+  minim = new Minim(this);
+  
+  // use the getLineOut method of the Minim object to get an AudioOutput object
+  out = minim.getLineOut();
+  
+  // create a sine wave Oscil, set to 440 Hz, at 0.5 amplitude
+  wave = new Oscil( 440, 0.5f, Waves.SINE );
+  // patch the Oscil to the output
+  wave.patch( out );
+}
+
+void draw()
+{
+  background(0);
+  stroke(255);
+  strokeWeight(1);
+  
+  // draw the waveform of the output
+  for(int i = 0; i &lt; out.bufferSize() - 1; i++)
+  {
+    line( i, 50  - out.left.get(i)*50,  i+1, 50  - out.left.get(i+1)*50 );
+    line( i, 150 - out.right.get(i)*50, i+1, 150 - out.right.get(i+1)*50 );
+  }
+
+  // draw the waveform we are using in the oscillator
+  stroke( 128, 0, 0 );
+  strokeWeight(4);
+  for( int i = 0; i &lt; width-1; ++i )
+  {
+    point( i, height/2 - (height*0.49) * wave.getWaveform().value( (float)i / width ) );
+  }
+}
+
+void mouseMoved()
+{
+  // usually when setting the amplitude and frequency of an Oscil
+  // you will want to patch something to the amplitude and frequency inputs
+  // but this is a quick and easy way to turn the screen into
+  // an x-y control for them.
+  
+  float amp = map( mouseY, 0, height, 1, 0 );
+  wave.setAmplitude( amp );
+  
+  float freq = map( mouseX, 0, width, 110, 880 );
+  wave.setFrequency( freq );
+}
+
+void keyPressed()
+{ 
+  switch( key )
+  {
+    case '1': 
+      wave.setWaveform( Waves.SINE );
+      break;
+     
+    case '2':
+      wave.setWaveform( Waves.TRIANGLE );
+      break;
+     
+    case '3':
+      wave.setWaveform( Waves.SAW );
+      break;
+    
+    case '4':
+      wave.setWaveform( Waves.SQUARE );
+      break;
+      
+    case '5':
+      wave.setWaveform( Waves.QUARTERPULSE );
+      break;
+     
+    default: break; 
+  }
+}
+</pre></td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Constructors</td>
+    <td valign=top class="descList"><pre></pre></td>
+  </tr>
+  
+  
+     <tr>
+       <td class="mainText">Fields</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_field_left.html">left</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The AudioBuffer containing the left channel samples. If this is a mono
+ sound, it contains the single channel of audio.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_field_mix.html">mix</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The AudioBuffer containing the mix of the left and right channels. If this is
+ a mono sound, <code>mix</code> contains the same
+ samples as <code>left</code>.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_field_right.html">right</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The AudioBuffer containing the right channel samples. If this is a mono
+ sound, <code>right</code> contains the same samples as
+ <code>left</code>.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  
+     <tr>
+       <td class="mainText">Methods</td>
+       <td valign=top class="descList">
+         <table border=0 cellspacing=0 cellpadding=0>
+           
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_addlistener.html">addListener ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Add an AudioListener to this sound generating object.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_buffersize.html">bufferSize ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The internal buffer size of this sound object.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getbalance.html">getBalance ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the current balance.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getdurationfactor.html">getDurationFactor ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the current value of the duration factor for this output.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getformat.html">getFormat ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns AudioFormat object that describes the audio properties 
+ of this sound generating object.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getgain.html">getGain ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the current gain.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getnoteoffset.html">getNoteOffset ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the current value of the note offset for this output.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getpan.html">getPan ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the current pan.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_gettempo.html">getTempo ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Return the current tempo of the AudioOuput. 
+ Tempo is expressed in BPM (beats per minute).<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_getvolume.html">getVolume ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the current volume.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_ismuted.html">isMuted ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns true if the sound is muted.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_mute.html">mute ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Mutes the sound.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_pausenotes.html">pauseNotes ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>pause note processing<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_playnote.html">playNote ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Schedule a "note" to played by the output.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_removelistener.html">removeListener ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Removes an AudioListener that was previously 
+ added to this sound object.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_resumenotes.html">resumeNotes ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Resume note processing.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_samplerate.html">sampleRate ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Returns the sample rate of this sound object.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setbalance.html">setBalance ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the balance.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setdurationfactor.html">setDurationFactor ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets a factor that will scale durations passed to subsequent playNote calls.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setgain.html">setGain ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the gain.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setnoteoffset.html">setNoteOffset ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the amount of time added to all start times passed to playNote calls.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setpan.html">setPan ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the pan.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_settempo.html">setTempo ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Set the tempo of the AudioOutput to change the meaning of start times and durations for notes.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_setvolume.html">setVolume ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Sets the volume.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_shiftbalance.html">shiftBalance ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Transitions the balance from one value to another.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_shiftgain.html">shiftGain ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Transitions the gain from one value to another.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_shiftpan.html">shiftPan ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Transitions the pan from one value to another.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_shiftvolume.html">shiftVolume ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Transitions the volume from one value to another.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_type.html">type ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>The type is an int describing the number of channels
+ this sound object has.<BR><BR></td>
+	  </tr>
+    
+      <tr>
+        <td width="120" valign=top><a href="audiooutput_method_unmute.html">unmute ( )</a></td>
+        <td width="20">&nbsp;</td>
+        <td valign=top>Unmutes the sound.<BR><BR></td>
+	  </tr>
+    
+         </table>
+	   </td>
+	 </tr>
+   
+  <tr>
+    <td valign=top class="mainText">Usage</td>
+    <td class="descList">Web & Application</td>
+  </tr>
+  <tr>
+    <td valign=top class="mainText">Related</td>
+    <td class="descList"><A href="minim_class_minim.html">Minim</A><BR>
+<A href="ugen_class_ugen.html">UGen</A><BR>
+<A href="audiooutput_method_playnote.html">playNote ( )</A><BR>
+</td>
+  </tr>
+</table>
+</center>
+</body>
+</html>
