@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
-// import krister.Ess.*;
-
 import ddf.minim.*;
 
 Minim minim;
@@ -28,14 +26,13 @@ void setup() {
     smooth();
 
     fontA = loadFont("CourierNew36.vlw");
-    
-    // Ess.start(this);
+
     minim = new Minim(this);
     sounds = new Sounds();
 
     game = new Game();
     game.init(true);
-    
+
     println("Game Started");
     println("Size = (" + width + ", " + height + ")");
 }
