@@ -21,7 +21,6 @@ boolean noHit = false;
 
 void setup() {
     size(800,675);
-    frame.setResizable(true);
     frameRate(30);
     smooth();
 
@@ -38,7 +37,7 @@ void setup() {
 }
 
 void draw() {
-    frame.setSize(800,675);
+    size(800,675);
     try {
         game.draw();
     }
