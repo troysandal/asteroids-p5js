@@ -1,7 +1,27 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="/node_modules/p5/lib/p5.min.js" type="text/javascript"></script>
+    <script src="/node_modules/systemjs/dist/system.js"></script>
+    <script src="/node_modules/tslib/tslib.js"></script>
+</head>
+
 <body>
-<script src="processing.min.js"></script>
-<script src="minim.js"></script>
-<canvas data-processing-sources="asteroids.pde Asteroid.pde AsteroidFactory.pde DisplayList.pde DisplayObject.pde EnemyShip.pde ExplodingShip.pde Explosion.pde FlyingObject.pde Game.pde GameOver.pde GameOverController.pde HomeScreen.pde InPlayController.pde InputController.pde NewGame.pde NewGameController.pde ScoreBoard.pde Ship.pde Shot.pde Sound.pde SoundLoop.pde Sounds.pde"></canvas>
+    <script>
+        System.config({
+            packages: {
+                "dist": {
+                    "defaultExtension": "js",
+                    "main": "main"
+                }
+            }
+        });
+
+        System.import("dist");
+    </script>
 </body>
+
 </html>

@@ -1,8 +1,4 @@
-class Polygon {
-    public Polygon(int[] x, int[] y, int points) {
 
-    }
-}
 class AsteroidFactory {
     public int quadrant = 0;
     private Polygon[] Shapes;

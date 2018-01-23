@@ -2,9 +2,18 @@
   "name": "asteroids",
   "version": "0.0.1",
   "dependencies": {
-    "serve": "^6.4.8"
+    "systemjs": "^0.20.19",
+    "tslib": "^1.8.1"
+  },
+  "devDependencies": {
+    "@types/es6-shim": "^0.31.35",
+    "es6-shim": "^0.35.3",
+    "live-server": "^1.2.0"
   },
   "scripts": {
-    "serve": "PORT=3001 serve ."
+    "start": "npm run watch-typescript & npm run serve",
+    "watch-typescript": "tsc -w",
+    "serve": "PORT=3001 live-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
