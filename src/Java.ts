@@ -26,6 +26,26 @@ export class Polygon {
   }
 }
 
+export class Dimension {
+  public width:number
+  public height:number
+
+  constructor(width:number, height:number) {
+    this.width = width
+    this.height = height
+  }
+}
+
+export class Point {
+  public x:number
+  public y:number
+
+  constructor(x:number, y:number) {
+    this.x = x
+    this.y = y
+  }
+}
+
 export function randomRange(from:number, to:number) {
   return from + (Math.random() * (to - from))
 }
