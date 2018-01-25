@@ -11,7 +11,8 @@
 // import java.util.Iterator;
 // import java.util.ListIterator;
 import { Minim } from "./minim"
-import { Sounds } from "./Sounds"
+import Sounds from "./Sounds"
+import Game from './Game'
 
 var minim;
 

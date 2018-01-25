@@ -44,7 +44,7 @@ class AsteroidFactory {
     int roid = 0;
     Polygon nextAsteroid() {
         roid = ++roid % Shapes.length;
-        //println("roid is " + roid);
+        //console.log("roid is " + roid);
         return Shapes[roid];
     }
 

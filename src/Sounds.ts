@@ -7,7 +7,7 @@ const dE:number = 250;
 const N:number = 80;
 const dR: number = (dS - dE) / N;
 
-export class Sounds {
+export default class Sounds {
     inPlay: boolean = false;
     wait: number
     start: number
