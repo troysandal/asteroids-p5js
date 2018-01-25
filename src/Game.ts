@@ -9,19 +9,11 @@ import DisplayObject from './DisplayObject'
 import EnemyShip from './EnemyShip'
 import HomeScreen from './HomeScreen'
 import ScoreBoard from './ScoreBoard'
-import {Dimension, Point, Rectangle} from './Java'
+import {Dimension, Point, Rectangle, randomRange, randomRangeInt} from './Java'
 import NewGame from './NewGame'
 import GameOver from './GameOver'
 import FlyingObject from './FlyingObject'
 import Asteroid from './Asteroid'
-
-function randomRange(from:number, to:number) {
-    return from + (Math.random() * (to - from))
-}
-
-function randomRangeInt(from:number, to:number) {
-    return Math.round(randomRange(from, to))
-}
 
 const safeWH:Dimension = new Dimension(100, 100);
 
