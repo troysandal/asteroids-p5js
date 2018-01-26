@@ -5,12 +5,14 @@
     "lodash": "^4.17.4",
     "p5": "^0.6.0",
     "systemjs": "^0.20.19",
-    "tslib": "^1.8.1"
+    "tslib": "^1.8.1",
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.35",
     "es6-shim": "^0.35.3",
-    "live-server": "^1.2.0"
+    "fuse-box": "^3.0.2",
+    "live-server": "^1.2.0",
+    "typescript": "^2.6.2"
   },
   "scripts": {
     "start": "npm run watch-typescript & npm run serve",

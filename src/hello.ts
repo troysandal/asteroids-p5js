@@ -1,0 +1,1 @@
+export default function hello() { return "hi mom" }
