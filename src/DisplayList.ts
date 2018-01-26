@@ -6,6 +6,10 @@ import FlyingObject from './FlyingObject'
 export default class DisplayList {
     private objects/*:List*/ = []
 
+    public iterator() {
+        return this.objects
+    }
+
     add(o:DisplayObject) {
         this.objects.push(o);
     }

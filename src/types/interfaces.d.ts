@@ -1,6 +1,7 @@
 declare const p: p5;
 declare let game;
 declare let noHit:boolean;
+declare let fontA;
 declare const sounds;
 declare const EXPLODE_SMALL: number;
 declare const EXPLODE_MEDIUM: number;

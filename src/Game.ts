@@ -151,15 +151,12 @@ export default class Game {
     isSafeZone(center:Point, wh:Dimension):boolean {
         const zone:Rectangle = new Rectangle(center.x - wh.width/2, center.y - wh.height/2, wh.width, wh.height);
         console.log("Checking safe zone " + zone.toString());
-        const it/*:Iterator*/ = this.displayList.iterator();
 
-        while (it.hasNext()) {
-            const fo:DisplayObject = it.next() as DisplayObject;
-
+        for (const fo of this.displayList.iterator()) {
             if (!(fo instanceof FlyingObject))
                 continue;
 
-            if (zone.intersects((fo).rect())) {
+            if (zone.intersects((fo as FlyingObject).rect())) {
                 return false;
             }
         }
@@ -211,8 +208,7 @@ export default class Game {
         const it/*Iterator*/ = this.displayList.iterator();
         let asteroids:number = 0;
 
-        while (it.hasNext()) {
-            const fo:DisplayObject = it.next();
+        for (const fo of this.displayList.iterator()) {
             if (fo instanceof Asteroid)
                 asteroids++;
 
