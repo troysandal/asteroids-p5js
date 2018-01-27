@@ -1,4 +1,5 @@
 import { AudioPlayer } from './minim';
+import { Globals } from './Globals'
 
 export class Sound {
     static DEFAULT_CHANNELS = 6;
@@ -16,12 +17,12 @@ export class Sound {
         this.channels = new AudioPlayer[channelCount];
 
         for (let i = 0 ; i < this.channels.length ; i++) {
-            this.channels[i] = minim.loadFile(filename);
+            this.channels[i] = Globals.minim.loadFile(filename);
         }
     }
 
     play() {
-        if (noSound) return;
+        if (Globals.noSound) return;
 
         let which = -1;
 

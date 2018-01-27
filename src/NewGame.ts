@@ -1,4 +1,5 @@
 import DisplayObject from './DisplayObject'
+import {Globals} from './Globals'
 
 /**
  * A display object with a fixed lifetime.
@@ -11,13 +12,13 @@ export default class NewGame extends DisplayObject {
 
     constructor() {
         super()
-        this.end = Math.round(p.frameCount + seconds * p.frameRate());
+        this.end = Math.round(Globals.p.frameCount + seconds * Globals.p.frameRate());
     }
 
     update(it/*:ListIterator*/) {
-        if (p.frameCount >= this.end && !this.remove) {
+        if (Globals.p.frameCount >= this.end && !this.remove) {
             this.remove = true;
-            game.startNewLevel(it);
+            Globals.game.startNewLevel(it);
         }
     }
 

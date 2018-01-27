@@ -8,3 +8,4 @@ application.macosx
 node_modules
 dist
 build
+.fusebox

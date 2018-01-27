@@ -1,7 +1,8 @@
 import DisplayObject from './DisplayObject'
+import {Globals} from './Globals'
 
 export default class ExplodingShip extends DisplayObject {
-    endAt:number = p.frameCount + (p.frameRate() * 2);
+    endAt:number = Globals.p.frameCount + (Globals.p.frameRate() * 2);
     x:number
     y:number;
 
@@ -12,8 +13,8 @@ export default class ExplodingShip extends DisplayObject {
     }
 
     update(it/*:ListIterator*/) {
-        if (p.frameCount >= this.endAt) {
-            game.newShip(it);
+        if (Globals.p.frameCount >= this.endAt) {
+            Globals.game.newShip(it);
             this.remove = true;
             return;
         }
@@ -22,9 +23,9 @@ export default class ExplodingShip extends DisplayObject {
         const w:number = 20
         const h:number = 20;
 
-        p.stroke(255);
-        p.translate(this.x - 20/2, this.y - 20/2);
-        p.line(0, 0, w/2, 20);
-        p.line(w/2, 0, 20, h/2);
+        Globals.p.stroke(255);
+        Globals.p.translate(this.x - 20/2, this.y - 20/2);
+        Globals.p.line(0, 0, w/2, 20);
+        Globals.p.line(w/2, 0, 20, h/2);
     }
 }

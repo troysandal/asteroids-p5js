@@ -1,7 +1,8 @@
 import FlyingObject from './FlyingObject'
 import {Polygon, randomRangeInt, Rectangle} from './Java'
 import Shot from './Shot'
-import {CLOSE} from './Globals'
+import {Globals, EXPLODE_BIG, EXPLODE_MEDIUM, EXPLODE_SMALL} from './Globals'
+
 /**
  * Base class for enemy ships.
  *
@@ -27,9 +28,9 @@ export default class EnemyShip extends FlyingObject {
         this.big = big;
 
         const left:number = 0;
-        const right:number = p.width - left;
-        const top:number = p.height/10;
-        const bottom:number = p.height - top;
+        const right:number = Globals.p.width - left;
+        const top:number = Globals.p.height/10;
+        const bottom:number = Globals.p.height - top;
         const speed:number = big ? 1.5 : 2;
 
         switch (randomRangeInt(1, 4)) {
@@ -45,24 +46,24 @@ export default class EnemyShip extends FlyingObject {
         this.savedDY = speed;
 
         this.shotDelay = big ? 1 : 0;
-        this.lastShot = p.frameCount;
+        this.lastShot = Globals.p.frameCount;
 
         this.dirChangeDelay = big ? 2.5 : 2;
-        this.lastDirChange = p.frameCount;
+        this.lastDirChange = Globals.p.frameCount;
 
         // This looks crummy for small ones, redo, the multiple just isn't good
         // Also make this into a factory - too costly to redo each time.
-        this.vertices = game.asteroidFactory.createPolygon([
+        this.vertices = Globals.game.asteroidFactory.createPolygon([
             [40, 0], [60, 0], [70, 20], [100, 40], [70, 60], [30, 60], [0, 40], [30, 20]
         ]);
 
         if (big) {
             this.points = 200;
-            this.vertices = game.asteroidFactory.scaleAsteroid(this.vertices, 40);
+            this.vertices = Globals.game.asteroidFactory.scaleAsteroid(this.vertices, 40);
         }
         else {
             this.points = 1000;
-            this.vertices = game.asteroidFactory.scaleAsteroid(this.vertices, 20);
+            this.vertices = Globals.game.asteroidFactory.scaleAsteroid(this.vertices, 20);
         }
 
         this.w = this.vertices.getBounds().width;
@@ -74,46 +75,46 @@ export default class EnemyShip extends FlyingObject {
 
     public startSounds() {
         if (this.big)
-            sounds.bigShip.play();
+            Globals.sounds.bigShip.play();
         else
-            sounds.smallShip.play();
+            Globals.sounds.smallShip.play();
     }
 
     public stopSounds() {
         if (this.big)
-            sounds.bigShip.stop();
+            Globals.sounds.bigShip.stop();
         else
-            sounds.smallShip.stop();
+            Globals.sounds.smallShip.stop();
     }
 
     public collide(other:FlyingObject, add/*:List*/) {
         super.collide(other, add);
-        sounds.explode(EXPLODE_MEDIUM);
+        Globals.sounds.explode(EXPLODE_MEDIUM);
         this.stopSounds();
 
-        game.enemy = null;
+        Globals.game.enemy = null;
 
         console.log("Enemy exploded!");
 
         // HACK : Remove after testing
-        //game.enemy = new EnemyShip(true);
-        //game.addObject(game.enemy);
+        //Globals.game.enemy = new EnemyShip(true);
+        //Globals.game.addObject(Globals.game.enemy);
     }
 
     update(it/*:ListIterator*/) {
         // If ship is off screen yank it.
-        if ( ((this.x + this.dx) > p.width) || ((this.x + this.dx) < -this.w) ) {
+        if ( ((this.x + this.dx) > Globals.p.width) || ((this.x + this.dx) < -this.w) ) {
             console.log("Enemy off screen");
             this.stopSounds();
             this.remove = true;
-            game.enemy = null;
+            Globals.game.enemy = null;
             return;
         }
 
         // Move the ship up, down, or keep it level every x% of the screen.
-           if (p.frameCount > (this.lastDirChange + this.dirChangeDelay * p.frameRate())) {
-            this.lastDirChange = p.frameCount;
-               //console.log("p.frameCount=" + p.frameCount + "," + lastDirChange + "," + dirChangeDelay + "," + p.frameRate());
+           if (Globals.p.frameCount > (this.lastDirChange + this.dirChangeDelay * Globals.p.frameRate())) {
+            this.lastDirChange = Globals.p.frameCount;
+               //console.log("p.frameCount=" + Globals.p.frameCount + "," + lastDirChange + "," + dirChangeDelay + "," + Globals.p.frameRate());
                switch(randomRangeInt(0, 100) % 3) {
                    case 0: this.dy = this.savedDY; break;
                    case 1: this.dy = 0; break;
@@ -128,14 +129,14 @@ export default class EnemyShip extends FlyingObject {
             this.shot = null;
 
             // Wait a bit before firing
-            if (p.frameCount > (this.lastShot + this.shotDelay * p.frameRate())) {
+            if (Globals.p.frameCount > (this.lastShot + this.shotDelay * Globals.p.frameRate())) {
                 this.fire(it);
             }
         }
     }
 
     private fire(it/*:ListIterator*/) {
-        this.lastShot = p.frameCount;
+        this.lastShot = Globals.p.frameCount;
         //console.log("Enemy shot fired!");
 
         // small ship shoots right at our hero every 3rd shot
@@ -148,21 +149,21 @@ export default class EnemyShip extends FlyingObject {
         let a:number = 135
 
         if (!this.big && this.targetHero == 0) {
-            const r:Rectangle = game.ship.rect();
+            const r:Rectangle = Globals.game.ship.rect();
             const d:Rectangle = this.rect();
             //console.log("ship is  at " + r.toString() + ", enemy at " + d.toString());
             d.translate(Math.round(-r.x), Math.round(-r.y))
             //console.log("ship is  NOW at " + r.toString() + ", enemy at " + d.toString());
-            p.translate(r.x, r.y);
-            a = p.degrees(Math.atan2(d.y, -d.x));
-            p.translate(-r.x, -r.y);
+            Globals.p.translate(r.x, r.y);
+            a = Globals.p.degrees(Math.atan2(d.y, -d.x));
+            Globals.p.translate(-r.x, -r.y);
         }
         else {
             a = randomRangeInt(0, 360);
         }
 
-        l = this.x + this.w/2 + this.radius * Math.cos(p.radians(a));
-        t = this.y + this.h/2 - this.radius * Math.sin(p.radians(a));
+        l = this.x + this.w/2 + this.radius * Math.cos(Globals.p.radians(a));
+        t = this.y + this.h/2 - this.radius * Math.sin(Globals.p.radians(a));
 
         console.log("Shot = " + a + " @ " + l + ", " + t);
 
@@ -171,17 +172,17 @@ export default class EnemyShip extends FlyingObject {
     }
 
     draw() {
-        p.stroke(255);
-        p.noFill();
-        p.translate(this.x, this.y);
+        Globals.p.stroke(255);
+        Globals.p.noFill();
+        Globals.p.translate(this.x, this.y);
 
-        p.beginShape();
+        Globals.p.beginShape();
         for (let i:number = 0 ; i < this.vertices.npoints ; i++)
-            p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
-        p.endShape(CLOSE);
+            Globals.p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
+        Globals.p.endShape(CLOSE);
 
-        p.line(this.vertices.xpoints[2], this.vertices.ypoints[2], this.vertices.xpoints[7], this.vertices.ypoints[7]);
-        p.line(this.vertices.xpoints[3], this.vertices.ypoints[3], this.vertices.xpoints[6], this.vertices.ypoints[6]);
+        Globals.p.line(this.vertices.xpoints[2], this.vertices.ypoints[2], this.vertices.xpoints[7], this.vertices.ypoints[7]);
+        Globals.p.line(this.vertices.xpoints[3], this.vertices.ypoints[3], this.vertices.xpoints[6], this.vertices.ypoints[6]);
 
     }
 }

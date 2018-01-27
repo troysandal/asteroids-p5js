@@ -1,4 +1,5 @@
 import DisplayObject from './DisplayObject'
+import {Globals} from './Globals'
 
 const lifetime:number = 1;  // Lifetime in seconds
 
@@ -17,7 +18,7 @@ export default class Explosion extends DisplayObject {
         super();
         this.x = x;
         this.y = y;
-        this.end = p.frameCount + p.frameRate() * lifetime;
+        this.end = Globals.p.frameCount + Globals.p.frameRate() * lifetime;
 
         // Generate particles velocities.
     }
@@ -26,18 +27,18 @@ export default class Explosion extends DisplayObject {
         for (let i:number = 0 ; i < this.pts.length ; i++)
             this.pts[i][2] += this.pts[i][1];
 
-        if (p.frameCount >= this.end) {
+        if (Globals.p.frameCount >= this.end) {
             this.remove = true;
         }
     }
 
     draw() {
-        p.translate(this.x, this.y);
-        p.stroke(255);
+        Globals.p.translate(this.x, this.y);
+        Globals.p.stroke(255);
 
         for (let i:number = 0 ; i < this.pts.length ; i++) {
-            p.rotate(p.radians(this.pts[i][0]));
-            p.point(this.pts[i][2], 0);
+            Globals.p.rotate(Globals.p.radians(this.pts[i][0]));
+            Globals.p.point(this.pts[i][2], 0);
         }
     }
 }

@@ -14,6 +14,7 @@ import NewGame from './NewGame'
 import GameOver from './GameOver'
 import FlyingObject from './FlyingObject'
 import Asteroid from './Asteroid'
+import {Globals} from './Globals'
 
 const safeWH:Dimension = new Dimension(100, 100);
 
@@ -34,7 +35,7 @@ export default class Game {
     tryNewShip:boolean = false;
 
     init(home:boolean) {
-        sounds.killAllSounds();
+        Globals.sounds.killAllSounds();
 
         if (home) {
             console.log("Home Screen");
@@ -55,7 +56,7 @@ export default class Game {
     }
 
     startNewLevel(/*ListIterator*/ it) {
-        sounds.startLevel();
+        Globals.sounds.startLevel();
         this.waiting = false;
 
         console.log("Starting level " + this.level + " with " + this.roids + " asteroids.");
@@ -69,7 +70,7 @@ export default class Game {
         this.level++;
         this.roids = Math.min(this.roids + 2, 11);
         this.timeOnLevel = 0;
-        this.levelFrameStart = p.frameCount;
+        this.levelFrameStart = Globals.p.frameCount;
         console.log("Next Level : " + this.level);
 
         // Wait one second before starting the level.
@@ -87,7 +88,7 @@ export default class Game {
 
     gameOver(/*ListIterator*/ it) {
         console.log("Game over!");
-        sounds.stopGame();
+        Globals.sounds.stopGame();
         this.controller = new GameOverController();
         it.add(new GameOver());
     }
@@ -115,7 +116,7 @@ export default class Game {
     tryAddingShip() {
         // Wait until center is clear
 
-        const center:Point = new Point(p.width/2, p.height/2);
+        const center:Point = new Point(Globals.p.width/2, Globals.p.height/2);
 
         if (!this.isSafeZone(center, safeWH)) {
              console.log("Center not clear!");
@@ -124,7 +125,7 @@ export default class Game {
 
         console.log("Found a clearing!");
 
-        this.ship = new Ship(p.width/2, p.height/2);
+        this.ship = new Ship(Globals.p.width/2, Globals.p.height/2);
         this.addObject(this.ship);
         this.tryNewShip = false;
     }
@@ -136,8 +137,8 @@ export default class Game {
 
         for (let i:number = 0 ; i < MAX_TRIES ; i++) {
             center = new Point(
-                randomRangeInt(p.width * 0.15, p.width * 0.85),
-                randomRangeInt(p.height * 0.15, p.height * 0.85)
+                randomRangeInt(Globals.p.width * 0.15, Globals.p.width * 0.85),
+                randomRangeInt(Globals.p.height * 0.15, Globals.p.height * 0.85)
             );
             console.log("..." + center.toString());
 
@@ -169,10 +170,10 @@ export default class Game {
         if (this.tryNewShip)
         this.tryAddingShip();
 
-        sounds.playBoop();
+        Globals.sounds.playBoop();
 
         const last:number = this.timeOnLevel;
-        const timeOnLevel = Math.round((p.frameCount - this.levelFrameStart) / p.frameRate());
+        const timeOnLevel = Math.round((Globals.p.frameCount - this.levelFrameStart) / Globals.p.frameRate());
         if (timeOnLevel != last) {
             //console.log("Time on level: " + timeOnLevel + " seconds.");
             //console.log("" + (frameCount - levelFrameStart) + ", " +  (frameRate * 3));
@@ -186,10 +187,10 @@ export default class Game {
 
         if (this.enemy == null && timeOnLevel > ((this.level < 3) ? time_until_enemy_l12 : ((this.level < 6) ? time_until_enemy_l345 : time_until_enemy_l6up)) ) {
             if (this.nextEnemy == 0) {
-                this.nextEnemy = Math.round(p.frameCount + Math.round(randomRangeInt(10,20) * p.frameRate()));
+                this.nextEnemy = Math.round(Globals.p.frameCount + Math.round(randomRangeInt(10,20) * Globals.p.frameRate()));
                 console.log("Next enemy at " + this.nextEnemy);
             }
-            else if (p.frameCount >= this.nextEnemy) {
+            else if (Globals.p.frameCount >= this.nextEnemy) {
                 console.log("Adding enemy ship");
                 this.nextEnemy = 0;
                 // <= 10K always show big ship, above randomly choose
@@ -204,7 +205,7 @@ export default class Game {
         this.displayList.hitTest();
 
         // Draw
-        p.background(0);
+        Globals.p.background(0);
         const it/*Iterator*/ = this.displayList.iterator();
         let asteroids:number = 0;
 
@@ -212,9 +213,9 @@ export default class Game {
             if (fo instanceof Asteroid)
                 asteroids++;
 
-            p.push();
+            Globals.p.push();
             fo.draw();
-            p.pop();
+            Globals.p.pop();
         }
 
         if (asteroids == 0 && this.enemy == null && !this.waiting) {

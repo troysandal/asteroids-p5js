@@ -1,6 +1,7 @@
 import DisplayObject from './DisplayObject'
 import { Rectangle } from './Java'
 import Explosion from './Explosion'
+import {Globals} from './Globals'
 
 const DRAG_X:number = 0.02
 const DRAG_Y:number = 0.02
@@ -39,20 +40,20 @@ export default class FlyingObject extends DisplayObject {
     update(/*ListIterator*/ it) {
         this.x += this.dx;
 
-        if (this.x > p.width)
+        if (this.x > Globals.p.width)
             this.x = -this.w;
         else if (this.x < -this.w)
-            this.x = p.width;
+            this.x = Globals.p.width;
 
         this.y += this.dy;
 
-        if (this.y > p.height) {
+        if (this.y > Globals.p.height) {
             this.y = -this.h;
         } else if (this.y < -this.h) {
-            this.y = p.height;
+            this.y = Globals.p.height;
         }
 
-        // Put some drag on the ship.
+        // Put some drag on the shiGlobals.p.
         if (this.applyDrag) {
             this.dx = this.drag(this.dx, this.dragX);
             this.dy = this.drag(this.dy, this.dragY);
@@ -69,18 +70,18 @@ export default class FlyingObject extends DisplayObject {
         //console.log(this.getClass().getName() + " collided with a " + other.getClass().getName());
         this.remove = true;
 
-        const oldScore:number = game.getScore();
-        const newScore:number = game.addPoints(this.points);
+        const oldScore:number = Globals.game.getScore();
+        const newScore:number = Globals.game.addPoints(this.points);
 
         // Give a new ship at 10K, then every 25K aftewards.
 
         if ((oldScore < 10000 && newScore >= 10000)) {
             console.log("NEW SHIP 10,000");
-            game.ships++;
+            Globals.game.ships++;
         }
         else if ( (newScore > 10000 && ((oldScore % 25000) > (newScore % 25000))) ) {
             console.log("NEW SHIP 25,000");
-            game.ships++;
+            Globals.game.ships++;
         }
 
         if (this.explodes) {
@@ -94,8 +95,8 @@ export default class FlyingObject extends DisplayObject {
         // Bleed off a percent
         const reduceBy:number = Math.abs(drag * d);
 
-        let result:number = (d > 0) ? p.constrain(d - reduceBy, 0, d) : p.constrain(d + reduceBy, d, 0);
-        if (Math.abs(p.frameRate() * result) < 1) {
+        let result:number = (d > 0) ? Globals.p.constrain(d - reduceBy, 0, d) : Globals.p.constrain(d + reduceBy, d, 0);
+        if (Math.abs(Globals.p.frameRate() * result) < 1) {
             result = 0;
         }
         //console.log("Slowing " + d + " to " + result + " == " + frameRate * result);

@@ -1,7 +1,7 @@
 import FlyingObject from './FlyingObject'
 import {Next, InitParams} from './AsteroidFactory'
 import {Polygon} from './Java'
-import {CLOSE} from './Globals'
+import {Globals} from './Globals'
 
 export default class Asteroid extends FlyingObject {
     vertices:Polygon;
@@ -24,7 +24,7 @@ export default class Asteroid extends FlyingObject {
     public collide(other:FlyingObject, add/*:List*/) {
         super.collide(other, add);
 
-        sounds.explode(this.explodeSound);
+        Globals.sounds.explode(this.explodeSound);
         //console.log("blowing up asteroid sized" + this.explodeSound);
 
         if (this.next != null)
@@ -32,13 +32,13 @@ export default class Asteroid extends FlyingObject {
     }
 
     public draw() {
-        p.stroke(255);
-        p.noFill();
-        p.translate(this.x, this.y);
-        p.beginShape();
+        Globals.p.stroke(255);
+        Globals.p.noFill();
+        Globals.p.translate(this.x, this.y);
+        Globals.p.beginShape();
         for (let i:number = 0 ; i < this.vertices.npoints ; i++) {
-            p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
+            Globals.p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
         }
-        p.endShape(CLOSE);
+        Globals.p.endShape(CLOSE);
     }
 }

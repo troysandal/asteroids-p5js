@@ -4,6 +4,9 @@ const fuse = FuseBox.init({
   homeDir: 'src',
   output: 'dist/$name.js',
   sourceMaps: true,
+  // globals: {
+  //   default : "Globals"
+  // },
   plugins: [
       WebIndexPlugin({
         template: "index.html",
@@ -16,7 +19,7 @@ fuse.dev();
 
 fuse.bundle('app')
   .cache(false)
-  .instructions('> asteroids.ts +lodash')
+  .instructions('> asteroids.ts +lodash +p5')
   .watch()
   .hmr();
 

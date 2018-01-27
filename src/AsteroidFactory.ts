@@ -1,5 +1,6 @@
 import Asteroid from './Asteroid'
 import {Polygon, randomRange, randomRangeInt} from './Java'
+import {Globals, EXPLODE_BIG, EXPLODE_MEDIUM, EXPLODE_SMALL} from './Globals'
 
 function createPolygon(points:number[][]):Polygon {
     let x:number[] = []
@@ -34,31 +35,31 @@ export class InitParams {
     static border:number = 20.0;
 
     constructor(quadrant:number) {
-        const xBorder:number = Math.round(p.width * InitParams.border);
-        const yBorder:number = Math.round(p.height * InitParams.border);
+        const xBorder:number = Math.round(Globals.p.width * InitParams.border);
+        const yBorder:number = Math.round(Globals.p.height * InitParams.border);
 
         switch (quadrant % 4) {
             case 0:
-                this.x = p.width - xBorder + randomRangeInt(0, xBorder);
-                this.y = randomRangeInt(0, p.height);
+                this.x = Globals.p.width - xBorder + randomRangeInt(0, xBorder);
+                this.y = randomRangeInt(0, Globals.p.height);
                 break;
             case 1:
-                this.x = randomRangeInt(0, p.width);
+                this.x = randomRangeInt(0, Globals.p.width);
                 this.y = randomRangeInt(0, yBorder);
                 break;
             case 2:
                 this.x = randomRangeInt(0, xBorder);
-                this.y = randomRangeInt(0, p.height);
+                this.y = randomRangeInt(0, Globals.p.height);
                 break;
             case 3:
-                this.x = randomRangeInt(0, p.width);
-                this.y = p.height - yBorder + randomRangeInt(0, yBorder);
+                this.x = randomRangeInt(0, Globals.p.width);
+                this.y = Globals.p.height - yBorder + randomRangeInt(0, yBorder);
                 break;
         }
 
         const angle:number = Math.round(randomRange(InitParams.theta, 90 - InitParams.theta) + (quadrant % 4) * 90);
-        this.dx = Math.cos(p.radians(angle));
-        this.dy = Math.sin(p.radians(angle));
+        this.dx = Math.cos(Globals.p.radians(angle));
+        this.dy = Math.sin(Globals.p.radians(angle));
     }
 }
 
@@ -151,13 +152,13 @@ export default class AsteroidFactory {
 
 
     createSmall()  {
-        game.addObject(this.createSmallEx(null));
+        Globals.game.addObject(this.createSmallEx(null));
         }
     createMedium() {
-        game.addObject(this.createMediumEx(null));
+        Globals.game.addObject(this.createMediumEx(null));
         }
     createLarge()  {
-        game.addObject(this.createLargeEx(null));
+        Globals.game.addObject(this.createLargeEx(null));
         }
 
     createSmallEx(ip:InitParams):Asteroid  {

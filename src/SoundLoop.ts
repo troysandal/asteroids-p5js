@@ -1,4 +1,5 @@
 import { AudioPlayer } from './minim';
+import { Globals } from './Globals'
 
 const FOREVER: number = -1;
 
@@ -11,13 +12,13 @@ export class SoundLoop {
     }
 
     init(filename: string, loops: number) {
-        this.channel = minim.loadFile(filename);
+        this.channel = Globals.minim.loadFile(filename);
         //channel.smoothPan = true;
         this.loops = loops;
     }
 
     play() {
-        if (noSound) return;
+        if (Globals.noSound) return;
 
         if (this.channel.isPlaying()) {
             //if (loops != FOREVER) {

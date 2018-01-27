@@ -2,6 +2,7 @@ import _ from 'lodash'
 
 import DisplayObject from './DisplayObject'
 import FlyingObject from './FlyingObject'
+import { Globals } from './Globals'
 
 export default class DisplayList {
     private objects/*:List*/ = []
@@ -27,7 +28,7 @@ export default class DisplayList {
         let l:FlyingObject
         let r:FlyingObject
 
-        if (!noHit) {
+        if (!Globals.noHit) {
             for(let i = 0 ; i < this.objects.length ; i++) {
                 let x = this.objects[i]
                 if (!(x instanceof FlyingObject)) continue;

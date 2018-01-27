@@ -1,10 +1,11 @@
 import FlyingObject from './FlyingObject'
-
-const speed:number = 10;
-const time:number = 0.8 * p.frameRate();
+import {Globals} from './Globals'
 
 export default class Shot extends FlyingObject {
-    start:number = p.frameCount;
+    speed:number = 10;
+    time:number = 0.8 * Globals.p.frameRate();
+
+    start:number = Globals.p.frameCount;
 
     /**
      * @param x      Shot point.
@@ -15,17 +16,17 @@ export default class Shot extends FlyingObject {
      */
     constructor(x:number, y:number, dx:number, dy:number, angle:number) {
         super(x, y, 1, 1, 0, 0);
-        this.dx = dx + speed * Math.cos(p.radians(angle));
-        this.dy = dy + -speed * Math.sin(p.radians(angle));
+        this.dx = dx + this.speed * Math.cos(Globals.p.radians(angle));
+        this.dy = dy + -this.speed * Math.sin(Globals.p.radians(angle));
         this.explodes = false;
 
-        sounds.fire();
+        Globals.sounds.fire();
     }
 
     public update(it/*:ListIterator*/) {
         super.update(it);
 
-        if (p.frameCount >= this.start + time)
+        if (Globals.p.frameCount >= this.start + this.time)
             this.remove = true;
     }
 
@@ -36,7 +37,7 @@ export default class Shot extends FlyingObject {
         rectMode(CENTER);
         rect(x, y, 3, 3);
         */
-        p.stroke(255);
-        p.point(this.x, this.y);
+        Globals.p.stroke(255);
+        Globals.p.point(this.x, this.y);
     }
 }

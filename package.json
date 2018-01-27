@@ -5,7 +5,7 @@
     "lodash": "^4.17.4",
     "p5": "^0.6.0",
     "systemjs": "^0.20.19",
-    "tslib": "^1.8.1",
+    "tslib": "^1.8.1"
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.35",

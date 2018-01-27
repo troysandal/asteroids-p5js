@@ -1,47 +1,24 @@
 /* OpenProcessing Tweak of *@*http://www.openprocessing.org/sketch/1129*@* */
 /* !do not delete the line above, required for linking your tweak if you upload again */
-// import java.awt.Point;
-// //import java.awt.Polygon;
-// import java.awt.Rectangle;
-// import java.awt.Dimension;
-
-// import java.util.List;
-// import java.util.LinkedList;
-// import java.util.ArrayList;
-// import java.util.Iterator;
-// import java.util.ListIterator;
 import { Minim } from "./minim"
 import Sounds from "./Sounds"
 import Game from './Game'
-
-var minim;
-
-var noSound = false;
-var noHit = false;
-
-
-//Game
-var game = null;
-//PFont
-var fontA;
-// Sounds
-var sounds;
-
-const EXPLODE_BIG = 2;
-const EXPLODE_MEDIUM = 1;
-const EXPLODE_SMALL = 0;
+import {Globals} from './Globals'
+import 'p5'
 
 const sketch = (p:p5) => {
+    Globals.p = p
+
     p.keyPressed = () => {
-        game.controller.keyPressed();
+        Globals.game.controller.keyPressed();
     }
 
     p.keyReleased = () => {
-        game.controller.keyReleased();
+        Globals.game.controller.keyReleased();
     }
 
     p.mousePressed = () => {
-        game.controller.mousePressed();
+        Globals.game.controller.mousePressed();
     }
 
     p.preload = () => {
@@ -53,13 +30,13 @@ const sketch = (p:p5) => {
         p.frameRate(30);
         p.smooth();
 
-        fontA = p.loadFont("data/CourierNew36.vlw");
+        Globals.fontA = p.loadFont("data/CourierNew36.vlw");
 
-        minim = new Minim();
-        sounds = new Sounds();
+        Globals.minim = new Minim();
+        Globals.sounds = new Sounds();
 
-        game = new Game();
-        game.init(true);
+        Globals.game = new Game();
+        Globals.game.init(true);
 
         console.log("Game Started");
         console.log("Size = (" + p.width + ", " + p.height + ")");
@@ -72,7 +49,7 @@ const sketch = (p:p5) => {
     p.draw = () => {
         p.createCanvas(800,675);
         try {
-            game.draw();
+            Globals.game.draw();
         }
         catch (e) {
             console.log(e);
@@ -80,4 +57,4 @@ const sketch = (p:p5) => {
     }
 }
 
-const p:p5 = new p5(sketch);
+new p5(sketch);

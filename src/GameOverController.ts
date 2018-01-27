@@ -1,5 +1,6 @@
 import InputController from './InputController'
 import Game from './Game'
+import {Globals} from './Globals'
 
 export default class GameOverController extends InputController {
     public keyPressed() { }
@@ -12,7 +13,7 @@ export default class GameOverController extends InputController {
     public mousePressed() { this.newGame(); }
 
     private newGame() {
-           game = new Game();
-           game.init(true);
+           Globals.game = new Game();
+           Globals.game.init(true);
     }
 }

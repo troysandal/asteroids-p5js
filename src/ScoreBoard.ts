@@ -1,5 +1,6 @@
 import DisplayObject from './DisplayObject'
 import Ship from './Ship'
+import {Globals} from './Globals'
 
 export default class ScoreBoard extends DisplayObject {
     private ship:Ship;
@@ -14,25 +15,25 @@ export default class ScoreBoard extends DisplayObject {
 
     draw() {
         // Set the font and its size (in units of pixels)
-        p.textSize(this.fontSize)
-        p.textFont(fontA);
-        p.fill(255);
+        Globals.p.textSize(this.fontSize)
+        Globals.p.textFont(Globals.fontA);
+        Globals.p.fill(255);
 
         // Score
-        //p.textAlign(RIGHT); // TODO
-        p.text(game.getScore(), p.width - this.scoreLeft, this.topMargin, 0, 0);
+        //Globals.p.textAlign(RIGHT); // TODO
+        Globals.p.text(Globals.game.getScore(), Globals.p.width - this.scoreLeft, this.topMargin, 0, 0);
 
         // Ships
 
-        for (let i:number = 0 ; i < game.ships ; i++) {
-            p.push()
+        for (let i:number = 0 ; i < Globals.game.ships ; i++) {
+            Globals.p.push()
             this.ship.drawAt(this.scoreLeft + i * this.ship.width() + 5, this.topMargin/* + fontSize + 58*/);
-            p.pop();
+            Globals.p.pop();
         }
 
         // Level
         //textAlign(RIGHT);
-        //text("LEVEL:" + game.level, width, topMargin);
+        //text("LEVEL:" + Globals.game.level, width, topMargin);
 
     }
 }

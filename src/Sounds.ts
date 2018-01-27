@@ -1,6 +1,7 @@
 import { Minim } from "./minim"
 import { Sound } from "./Sound"
 import { SoundLoop } from "./SoundLoop"
+import { Globals, EXPLODE_BIG, EXPLODE_MEDIUM, EXPLODE_SMALL} from './Globals'
 
 const dS:number = 1000;
 const dE:number = 250;
@@ -61,7 +62,7 @@ export default class Sounds {
     startLevel() {
         this.inPlay = true;
         this.wait = dS;
-        this.start = p.millis();
+        this.start = Globals.p.millis();
         console.log("dS = " + dS);
         console.log("Sounds Start Level @" + this.wait + " wait, dS = " + dS);
     }
@@ -69,7 +70,7 @@ export default class Sounds {
     playBoop() {
         if (!this.inPlay) return;
 
-        const now = p.millis();
+        const now = Globals.p.millis();
 
         if (now - this.start > this.wait) {
             this.start = now;
