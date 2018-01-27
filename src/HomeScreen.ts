@@ -18,13 +18,13 @@ export default class HomeScreen extends DisplayObject {
 
         Globals.p.stroke(255);
         Globals.p.fill(255);
-        Globals.p.text("ASTEROIDS", Globals.p.width/2, Globals.p.height * .4, 0, 0);
+        Globals.p.text("ASTEROIDS", Globals.p.width/2, Globals.p.height * .4);
 
         Globals.p.stroke(255);
         Globals.p.fill(255);
         Globals.p.textSize(24)
         // Globals.p.textFont(Globals.fontA);
-        Globals.p.text("Click or Press A Key To Play", Globals.p.width/2, Globals.p.height * .6, 0, 0);
+        Globals.p.text("Click or Press A Key To Play", Globals.p.width/2, Globals.p.height * .6);
 
         //textFont(Globals.fontA, 16);
         //text("A T&T Production", width/2, height - 20);

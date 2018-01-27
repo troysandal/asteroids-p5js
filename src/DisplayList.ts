@@ -31,17 +31,25 @@ export default class DisplayList {
         if (!Globals.noHit) {
             for(let i = 0 ; i < this.objects.length ; i++) {
                 let x = this.objects[i]
-                if (!(x instanceof FlyingObject)) continue;
+                if (!(x instanceof FlyingObject)) {
+                    continue
+                };
 
                 const l:FlyingObject = x as FlyingObject;
-                if (l.remove) continue;
+                if (l.remove) {
+                    continue
+                };
 
                 for (let j = i + 1 ; j < this.objects.length ; j++) {
                     x = this.objects[i]
-                    if (!(x instanceof FlyingObject)) continue;
+                    if (!(x instanceof FlyingObject)) {
+                        continue
+                    };
 
                     const r:FlyingObject = x;
-                    if (r.remove) continue;
+                    if (r.remove) {
+                        continue
+                    };
 
                     if (l.intersects(r)) {
                         l.collide(r, newObjects);
@@ -54,7 +62,7 @@ export default class DisplayList {
 
         // Remove dead objects.
 
-        this.objects = remove((fo) => fo.remove);
+        remove(this.objects, (fo) => fo.remove);
 
         // Add new objects.
         this.objects = concat(this.objects, newObjects)

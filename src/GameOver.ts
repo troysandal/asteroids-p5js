@@ -11,6 +11,6 @@ export default class GameOver extends DisplayObject {
         //Globals.p.textAlign(CENTER);  // TODO
 
         Globals.p.fill(255);
-        Globals.p.text("G A M E   O V E R", Globals.p.width/2, Globals.p.height/2, 0, 0);
+        Globals.p.text("G A M E   O V E R", Globals.p.width/2, Globals.p.height/2);
     }
 }

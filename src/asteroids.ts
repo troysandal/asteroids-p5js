@@ -50,9 +50,11 @@ const sketch = (p:p5) => {
     }
 
     p.draw = () => {
-        p.createCanvas(800,675);
         try {
-            Globals.game.draw();
+            // frameRate() === 0 in 1st frame
+            if (p.frameCount > 1)  {
+                Globals.game.draw();
+            }
         }
         catch (e) {
             console.log(e);

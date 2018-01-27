@@ -39,6 +39,6 @@ export default class Asteroid extends FlyingObject {
         for (let i:number = 0 ; i < this.vertices.npoints ; i++) {
             Globals.p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
         }
-        Globals.p.endShape(CLOSE);
+        Globals.p.endShape(Globals.p.CLOSE);
     }
 }
