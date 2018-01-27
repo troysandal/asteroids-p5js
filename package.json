@@ -10,9 +10,7 @@
     "typescript": "^2.6.2"
   },
   "scripts": {
-    "start": "npm run watch-typescript & npm run serve",
-    "watch-typescript": "tsc -w",
-    "serve": "PORT=3001 live-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sketch": "node fuse.js",
+    "test": "echo \"No tests :(\" && exit 0"
   }
 }

@@ -27,6 +27,8 @@ export class Polygon {
   public ypoints:number[]
 
   constructor(xpoints:number[] = [], ypoints:number[] = [], npoints:number = 0) {
+    this.xpoints = xpoints
+    this.ypoints = ypoints
     this.npoints = npoints
   }
 

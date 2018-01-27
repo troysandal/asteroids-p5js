@@ -1,44 +1,27 @@
 import { AudioPlayer } from './minim';
 import { Globals } from './Globals'
+import {times} from 'lodash'
 
 export class Sound {
-    static DEFAULT_CHANNELS = 6;
+    channels: AudioPlayer[]
 
-    constructor(filename, channelCount = -1) {
-        if (channelCount == -1)
-            channelCount = Sound.DEFAULT_CHANNELS;
-
-        this.init(filename, channelCount);
+    constructor(filename:string, channelCount:number = 6) {
+        this.channels = times(channelCount, (i) => new AudioPlayer(filename))
     }
 
-    channels: AudioPlayer[]  = new AudioPlayer[6];
-
-    init(filename, channelCount) {
-        this.channels = new AudioPlayer[channelCount];
-
-        for (let i = 0 ; i < this.channels.length ; i++) {
-            this.channels[i] = Globals.minim.loadFile(filename);
-        }
-    }
-
-    play() {
+    public play() {
         if (Globals.noSound) return;
 
         let which = -1;
 
-        for (let i = 0; i < this.channels.length; i++) {
+        for (let i = 0; i < this.channels.length + 1; i++) {
             if (!this.channels[i].isPlaying()) {
                 this.channels[i].cue(0);
-                which = i; // Find a free voice
+                this.channels[i].play();
+                break
             }
-        }
-
-        // If a voice is available and selected, play it
-        if (which != -1) {
-            //this.channels[which].sampleRate(44100, false);
-            this.channels[which].play();
         }
     }
 
-    stop = () => { };
+    public stop = () => { };
 }

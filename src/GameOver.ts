@@ -7,7 +7,7 @@ export default class GameOver extends DisplayObject {
     draw() {
         // Set the font and its size (in units of pixels)
         Globals.p.textSize(32)
-        Globals.p.textFont(Globals.fontA);
+        // Globals.p.textFont(Globals.fontA);
         //Globals.p.textAlign(CENTER);  // TODO
 
         Globals.p.fill(255);

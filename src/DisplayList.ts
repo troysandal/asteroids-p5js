@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import {remove, concat} from 'lodash'
 
 import DisplayObject from './DisplayObject'
 import FlyingObject from './FlyingObject'
@@ -54,9 +54,9 @@ export default class DisplayList {
 
         // Remove dead objects.
 
-        this.objects = _.remove((fo) => fo.remove);
+        this.objects = remove((fo) => fo.remove);
 
         // Add new objects.
-        this.objects = _.concat(this.objects, newObjects)
+        this.objects = concat(this.objects, newObjects)
     }
 }

@@ -5,6 +5,7 @@ import Sounds from "./Sounds"
 import Game from './Game'
 import {Globals} from './Globals'
 import 'p5'
+import CourierNewPath from "./assets/CourierNew36.vlw"
 
 const sketch = (p:p5) => {
     Globals.p = p
@@ -30,8 +31,10 @@ const sketch = (p:p5) => {
         p.frameRate(30);
         p.smooth();
 
-        Globals.fontA = p.loadFont("data/CourierNew36.vlw");
+        // TODO
+        // Globals.fontA = p.loadFont('./' + CourierNewPath);
 
+        Globals.noSound = true;
         Globals.minim = new Minim();
         Globals.sounds = new Sounds();
 
