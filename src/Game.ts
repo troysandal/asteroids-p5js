@@ -181,8 +181,8 @@ export default class Game {
 
         // We add our first ship after 20 seconds for levels 1-2, 15 for 3-5
         // then 10 for all those after that.
-        const time_until_enemy_l12:number = 20; // 20
-        const time_until_enemy_l345:number = 15;
+        const time_until_enemy_l12:number = 2;
+        const time_until_enemy_l345:number = 5;
         const time_until_enemy_l6up:number = 10;
 
         if (this.enemy == null && timeOnLevel > ((this.level < 3) ? time_until_enemy_l12 : ((this.level < 6) ? time_until_enemy_l345 : time_until_enemy_l6up)) ) {

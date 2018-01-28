@@ -179,7 +179,7 @@ export default class EnemyShip extends FlyingObject {
         Globals.p.beginShape();
         for (let i:number = 0 ; i < this.vertices.npoints ; i++)
             Globals.p.vertex(this.vertices.xpoints[i], this.vertices.ypoints[i]);
-        Globals.p.endShape(CLOSE);
+        Globals.p.endShape(Globals.p.CLOSE);
 
         Globals.p.line(this.vertices.xpoints[2], this.vertices.ypoints[2], this.vertices.xpoints[7], this.vertices.ypoints[7]);
         Globals.p.line(this.vertices.xpoints[3], this.vertices.ypoints[3], this.vertices.xpoints[6], this.vertices.ypoints[6]);
