@@ -20,7 +20,7 @@ export default class ScoreBoard extends DisplayObject {
         Globals.p.fill(255);
 
         // Score
-        //Globals.p.textAlign(RIGHT); // TODO
+        Globals.p.textAlign(Globals.p.RIGHT); // TODO
         Globals.p.text(Globals.game.getScore(), Globals.p.width - this.scoreLeft, this.topMargin);
 
         // Ships

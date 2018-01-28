@@ -14,7 +14,7 @@ export default class HomeScreen extends DisplayObject {
         // Set the font and its size (in units of pixels)
         Globals.p.textSize(48)
         // Globals.p.textFont(Globals.fontA);
-        //Globals.p.textAlign(CENTER);
+        Globals.p.textAlign(Globals.p.CENTER);
 
         Globals.p.stroke(255);
         Globals.p.fill(255);
