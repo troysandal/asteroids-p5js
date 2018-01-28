@@ -87,7 +87,7 @@ export class Next {
 
     initParams(a:Asteroid):InitParams[] {
         const delta:number = 1;
-        let result:InitParams[] = new InitParams[2];
+        let result:InitParams[] = []
         result[0] = new InitParams(0);
         result[1] = new InitParams(0);
 

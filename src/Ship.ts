@@ -55,6 +55,7 @@ export default class Ship extends FlyingObject {
      */
     intersects(other:FlyingObject):boolean  {
         if (this.inHyperspace != -1) return false;
+        if (other instanceof Ship) { return false }
         const r1:Rectangle = new Rectangle(
             Math.round(this.x - this.w/2),
             Math.round(this.y - this.h/2),

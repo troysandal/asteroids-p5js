@@ -22,8 +22,6 @@ export default class DisplayList {
     }
 
     public hitTest() {
-        // Compare all pairs
-        //ListIterator lit = objects.listIterator(0);
         const newObjects = []
         let l:FlyingObject
         let r:FlyingObject
@@ -31,25 +29,18 @@ export default class DisplayList {
         if (!Globals.noHit) {
             for(let i = 0 ; i < this.objects.length ; i++) {
                 let x = this.objects[i]
-                if (!(x instanceof FlyingObject)) {
+                if (x.remove || !(x instanceof FlyingObject)) {
                     continue
                 };
 
                 const l:FlyingObject = x as FlyingObject;
-                if (l.remove) {
-                    continue
-                };
 
                 for (let j = i + 1 ; j < this.objects.length ; j++) {
-                    x = this.objects[i]
-                    if (!(x instanceof FlyingObject)) {
+                    x = this.objects[j]
+                    if (x.remove || !(x instanceof FlyingObject)) {
                         continue
                     };
-
-                    const r:FlyingObject = x;
-                    if (r.remove) {
-                        continue
-                    };
+                    const r:FlyingObject = x as FlyingObject;
 
                     if (l.intersects(r)) {
                         l.collide(r, newObjects);
