@@ -82,7 +82,7 @@ export class Next {
         const ips:InitParams[] = this.initParams(a);
 
         for (let i = 0 ; i < ips.length ; i++)
-            add.add(this.creator(ips[i]));
+            add.push(this.creator(ips[i]));
     }
 
     initParams(a:Asteroid):InitParams[] {

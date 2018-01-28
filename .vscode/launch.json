@@ -15,6 +15,21 @@
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:4444",
       "webRoot": "${workspaceFolder}"
-    }
+    },
+    {
+      "name": "Run mocha",
+      "request": "launch",
+      "type": "node",
+      "sourceMaps": true,
+      "protocol": "inspector",
+      "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+      "runtimeArgs": [
+        "-r", "ts-node/register"
+      ],
+			"stopOnEntry": false,
+			"args": ["test/**/*.spec.ts"],
+			"cwd": "${workspaceFolder}",
+			"runtimeExecutable": null
+		}
   ]
 }

@@ -70,7 +70,7 @@ export default class Ship extends FlyingObject {
         console.log("ship died");
         Globals.game.shipDied();
         console.log("Adding exploding ship");
-        add.add(new ExplodingShip(this.x, this.y));
+        add.push(new ExplodingShip(this.x, this.y));
     }
 
     fire() {

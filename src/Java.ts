@@ -15,7 +15,7 @@ class RectangleLRTB {
 
   intersects(other) {
     const notHorizontal = (this.right < other.left) || (this.left > other.right);
-    const notVertical = (this.top < other.bottom) || (this.bottom > other.top);
+    const notVertical = (this.top > other.bottom) || (this.bottom < other.top);
     const noIntersection = notHorizontal || notVertical;
     return !noIntersection;
   }

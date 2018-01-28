@@ -85,7 +85,7 @@ export default class FlyingObject extends DisplayObject {
         }
 
         if (this.explodes) {
-            add.add(new Explosion(this.x, this.y));
+            add.push(new Explosion(this.x, this.y));
         }
     }
 
