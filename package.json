@@ -1,6 +1,7 @@
 {
   "name": "asteroids",
   "version": "0.0.1",
+  "license": "MIT",
   "dependencies": {
     "chai": "^4.1.2",
     "lodash": "^4.17.4",
