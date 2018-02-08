@@ -67,7 +67,7 @@ export default class FlyingObject extends DisplayObject {
     }
 
     collide(other:FlyingObject, /* List */ add) {
-        console.log(this.constructor.name + " collided with a " + other.constructor.name);
+        console.log((this.constructor as any).name + " collided with a " + (other.constructor as any).name);
         this.remove = true;
 
         const oldScore:number = Globals.game.getScore();
