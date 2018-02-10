@@ -15,8 +15,7 @@ const fuse = FuseBox.init({
       target: "index.html"
     }),
     CopyPlugin({
-      useDefault: false,
-      files:['*.wav', '*.vlw']
+      files: ['.mp3', '.wav', '.vlw', '.otf']
     })
   ]
 });

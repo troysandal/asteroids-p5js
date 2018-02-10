@@ -5,7 +5,6 @@ import Sounds from "./Sounds"
 import Game from './Game'
 import {Globals} from './Globals'
 import 'p5'
-import CourierNewPath from "./assets/CourierNew36.vlw"
 
 const sketch = (p:p5) => {
     Globals.p = p
@@ -23,16 +22,14 @@ const sketch = (p:p5) => {
     }
 
     p.preload = () => {
-
+        const MainFont = require("./assets/Hyperspace.otf").default;
+        Globals.fontA = p.loadFont(MainFont);
     }
 
     p.setup = () => {
         p.createCanvas(800,675);
         p.frameRate(30);
         p.smooth();
-
-        // TODO
-        // Globals.fontA = p.loadFont('./' + CourierNewPath);
 
         Globals.noSound = true;
         Globals.minim = new Minim();
