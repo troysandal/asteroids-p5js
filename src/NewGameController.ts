@@ -1,16 +1,23 @@
 import InputController from './InputController'
 import Game from './Game'
-import {Globals} from './Globals'
+import {Globals, KEY_SPACE} from './Globals'
 
 export default class NewGameController extends InputController {
-    public keyPressed() { }
-
-    public keyReleased() {
-        this.newGame();
+    public keyPressed() {
+        if (Globals.p.keyCode == KEY_SPACE) {
+            this.newGame();
+        }
     }
 
-    public checkKeyboard() { }
-    public mousePressed() { this.newGame(); }
+    public keyReleased() {
+    }
+
+    public checkKeyboard() {
+    }
+
+    public mousePressed() {
+        this.newGame();
+    }
 
     private newGame() {
            Globals.game = new Game();

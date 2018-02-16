@@ -24,7 +24,7 @@ export default class HomeScreen extends DisplayObject {
         Globals.p.fill(255);
         Globals.p.textSize(24)
         Globals.p.textFont(Globals.fontA);
-        Globals.p.text("Click or Press A Key To Play", Globals.p.width/2, Globals.p.height * .6);
+        Globals.p.text("Click or Press Space To Play", Globals.p.width/2, Globals.p.height * .6);
     }
 
     update(it/*:ListIterator*/) {

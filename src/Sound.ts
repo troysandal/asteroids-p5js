@@ -1,12 +1,16 @@
-import { AudioPlayer } from './minim';
 import { Globals } from './Globals'
 import {times} from 'lodash'
+import 'p5'
+import 'p5/lib/addons/p5.sound'
+// This require is what gets p5.sound.js included
+require('p5/lib/addons/p5.sound')
+
 
 export class Sound {
-    channels: AudioPlayer[]
+    channels: p5.SoundFile[]
 
     constructor(filename:string, channelCount:number = 6) {
-        this.channels = times(channelCount, (i) => new AudioPlayer(filename))
+        this.channels = times(channelCount, (i) => Globals.p.loadSound(filename))
     }
 
     public play() {
@@ -16,7 +20,6 @@ export class Sound {
 
         for (let i = 0; i < this.channels.length + 1; i++) {
             if (!this.channels[i].isPlaying()) {
-                this.channels[i].cue(0);
                 this.channels[i].play();
                 break
             }

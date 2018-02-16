@@ -16,11 +16,11 @@ export default class ScoreBoard extends DisplayObject {
     draw() {
         // Set the font and its size (in units of pixels)
         Globals.p.textSize(this.fontSize)
-        // Globals.p.textFont(Globals.fontA);
+        Globals.p.textFont(Globals.fontA);
         Globals.p.fill(255);
 
         // Score
-        Globals.p.textAlign(Globals.p.RIGHT); // TODO
+        Globals.p.textAlign(Globals.p.RIGHT);
         Globals.p.text(Globals.game.getScore(), Globals.p.width - this.scoreLeft, this.topMargin);
 
         // Ships

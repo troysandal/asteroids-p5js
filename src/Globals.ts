@@ -1,3 +1,4 @@
+import Sounds from './Sounds';
 
 export const KEY_LEFT:number = 37;
 export const KEY_UP:number = 38;
@@ -12,10 +13,9 @@ export const EXPLODE_SMALL = 0;
 
 export class Globals {
   public static p
-  public static minim
   public static noSound: boolean
   public static noHit:boolean
   public static game
   public static fontA
-  public static sounds
+  public static sounds: Sounds
 }
