@@ -36,7 +36,7 @@ const sketch = (p:p5) => {
         }
 
     p.setup = () => {
-        p.createCanvas(800,675);
+        p.createCanvas(800,600);
         p.frameRate(30);
         p.smooth();
 
@@ -50,7 +50,7 @@ const sketch = (p:p5) => {
     }
 
     p.windowResized = () => {
-        p.resizeCanvas(p.windowWidth, p.windowHeight);
+        //p.resizeCanvas(p.windowWidth, p.windowHeight);
     }
 
     p.draw = () => {
