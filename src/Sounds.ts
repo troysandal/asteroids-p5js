@@ -28,7 +28,7 @@ export default class Sounds {
     sound: number = 0;
 
     boops:Sound[] = [new Sound (LOW_MP3), new Sound(HIGH_MP3) ];
-    shot:Sound  = new Sound(SHOT_MP3, 6);
+    shot:Sound  = new Sound(SHOT_MP3, 10);
     explodeBig:Sound = new Sound(EXPLODE_LOW_MP3);
     explodeMedium:Sound = new Sound(EXPLODE_MEDIUM_MP3);
     explodeSmall:Sound = new Sound(EXPLODE_HIGH_MP3);
