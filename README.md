@@ -2,7 +2,8 @@
 A Clone of Asteroids written as my first Processing app, now ported to p5js.
 
 ## JS Porting Notes / To Dos
-- port to p5.sounds
+- Use lodash each() where possible
+- Update fusebox+p5js template for p5.sound and p5.dom
 - Bug - shots make viewport shift
 - report bug with soundFormats() needs to take string|?* to p5.sound
 - push to openprocessing
