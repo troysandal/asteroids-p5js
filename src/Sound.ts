@@ -1,7 +1,6 @@
 import { Globals } from './Globals'
 import {times, each} from 'lodash'
 import 'p5'
-import 'p5/lib/addons/p5.sound'
 // This require is what gets p5.sound.js included
 require('p5/lib/addons/p5.sound')
 
