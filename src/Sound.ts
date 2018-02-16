@@ -1,5 +1,5 @@
 import { Globals } from './Globals'
-import {times} from 'lodash'
+import {times, each} from 'lodash'
 import 'p5'
 import 'p5/lib/addons/p5.sound'
 // This require is what gets p5.sound.js included
@@ -26,5 +26,11 @@ export class Sound {
         }
     }
 
-    public stop = () => { };
+    public stop = () => {
+        each(this.channels, (channel) => {
+            if (channel.isPlaying()) {
+                channel.stop;
+            }
+        })
+    };
 }

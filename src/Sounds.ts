@@ -1,3 +1,7 @@
+// TODO : I think this file *might* have made sense early on but
+// all this logic should be moved into the classes that know when/why
+// to play sound.
+
 import { Sound } from "./Sound"
 import { SoundLoop } from "./SoundLoop"
 import { Globals, EXPLODE_BIG, EXPLODE_MEDIUM, EXPLODE_SMALL} from './Globals'
@@ -25,9 +29,9 @@ export default class Sounds {
 
     boops:Sound[] = [new Sound (LOW_MP3), new Sound(HIGH_MP3) ];
     shot:Sound  = new Sound(SHOT_MP3, 6);
-    explodeLow:Sound = new Sound(EXPLODE_LOW_MP3);
-    _explodeMedium:Sound = new Sound(EXPLODE_MEDIUM_MP3);
-    explodeHigh:Sound = new Sound(EXPLODE_HIGH_MP3);
+    explodeBig:Sound = new Sound(EXPLODE_LOW_MP3);
+    explodeMedium:Sound = new Sound(EXPLODE_MEDIUM_MP3);
+    explodeSmall:Sound = new Sound(EXPLODE_HIGH_MP3);
     thrust:Sound = new Sound(THRUST_MP3, 1);
     smallShip:SoundLoop = new SoundLoop(SMALLSHIP_MP3);
     bigShip:SoundLoop = new SoundLoop(BIGSHIP_MP3);
@@ -39,9 +43,9 @@ export default class Sounds {
         this.thrust.stop();
         this.smallShip.stop();
         this.bigShip.stop();
-        this.explodeLow.stop();
-        this._explodeMedium.stop();
-        this.explodeHigh.stop();
+        this.explodeBig.stop();
+        this.explodeMedium.stop();
+        this.explodeSmall.stop();
     }
 
     Sounds() {
@@ -51,22 +55,19 @@ export default class Sounds {
     fire() { this.shot.play(); }
 
     explode(size: number) {
+        // TODO: Sounds.ts shouldn't knows anything about the size of asteroid
         switch (size) {
             case EXPLODE_SMALL:
-                this.explodeSmall();
+                this.explodeSmall.play();
                 break;
             case EXPLODE_MEDIUM:
-                this.explodeMedium();
+                this.explodeMedium.play();
                 break;
             case EXPLODE_BIG:
             default:
-                this.explodeBig();
+                this.explodeBig.play();
         }
     }
-
-    explodeSmall()  { this.explodeHigh.play(); }
-    explodeMedium() { this._explodeMedium.play(); }
-    explodeBig()    { this.explodeLow.play(); }
 
     startLevel() {
         this.inPlay = true;
@@ -94,5 +95,4 @@ export default class Sounds {
     }
 
     playThrust() { this.thrust.play(); }
-    stopThrust() { this.thrust.stop(); }
 }
