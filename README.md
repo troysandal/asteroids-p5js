@@ -1,6 +1,14 @@
 # asteroids
 A Clone of Asteroids written as my first Processing app, now ported to p5js.
 
+Instructions.
+```
+yarn
+yarn test
+yarn sketch
+open http://localhost:4444
+```
+
 ## JS Porting Notes / To Dos
 - Bug - shots make viewport shift
 - report bug with soundFormats() needs to take string|?* to p5.sound
