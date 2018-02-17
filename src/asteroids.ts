@@ -1,5 +1,3 @@
-/* OpenProcessing Tweak of *@*http://www.openprocessing.org/sketch/1129*@* */
-/* !do not delete the line above, required for linking your tweak if you upload again */
 import Sounds from "./Sounds"
 import Game from './Game'
 import {Globals} from './Globals'
