@@ -85,10 +85,10 @@ export class Next {
 
 export default class AsteroidFactory {
     createPolygon(points:number[][]):Polygon {
-        let x:number[] = []
-        let y:number[] = []
+        const x:number[] = []
+        const y:number[] = []
 
-        for (let i:number = 0 ; i < points.length ; i++) {
+        for (const i:number = 0 ; i < points.length ; i++) {
             x[i] = points[i][0];
             y[i] = points[i][1];
         }

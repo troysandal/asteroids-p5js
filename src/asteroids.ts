@@ -28,7 +28,7 @@ const sketch = (p:p5) => {
         p.soundFormats('mp3');
         Globals.sounds = new Sounds();
 
-        const MainFont = require("./assets/Hyperspace.otf").default;
+        const MainFont = require("./assets/Hyperspace.ttf").default;
         Globals.fontA = p.loadFont(MainFont);
         }
 
