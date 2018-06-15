@@ -1,5 +1,5 @@
 # asteroids
-A Clone of Asteroids written as my first Processing app, now ported to p5js.
+A Clone of Asteroids written as my first Processing app in 2008, now ported to [p5js](https://p5js.org/) and hosted at [Open Processing](https://www.openprocessing.org/sketch/561679).
 
 Instructions.
 ```
@@ -9,12 +9,15 @@ yarn sketch
 open http://localhost:4444
 ```
 
+## Publishing to Open Processing [Experimental]
+You can publish this sketch to [Open Processing](https://www.openprocessing.org).
+* Run `yarn dist-os`
+* Copy/Paste the contents of `./dist/app.js` to your sketch.
+* Add the files from `dist/assets` to the sketch's `Files` tab.
+* Turn on p5.Sound in your Sketch
+
 ## JS Porting Notes / To Dos
-- push to openprocessing
-  - setup sparky for different builds
-  - New Fusebox bundle for uploading to openprocessing
-- Bug - shots make viewport shift
-- Bug - report bug with soundFormats() needs to take string|?* to p5.sound
+- Bug - report bug with soundFormats() schema needs to take string|?* to p5.sound
 - Fix your atrocious hit testing code
 - Cleanup/Replace XxxControllers', use [isKeyDown](https://p5js.org/reference/#/p5/keyIsDown).
 - Favicon of a ship

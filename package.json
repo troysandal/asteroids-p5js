@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.1.2",
     "lodash": "^4.17.5",
     "p5": "^0.6.0"
   },
@@ -11,13 +10,17 @@
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.47",
     "@types/node": "^9.4.4",
+    "chai": "^4.1.2",
     "fuse-box": "^3.1.3",
     "mocha": "^5.0.0",
     "ts-node": "^4.1.0",
-    "typescript": "^2.7.1"
+    "typescript": "^2.7.1",
+    "uglify-es": "^3.3.9",
+    "uglify-js": "^3.4.0"
   },
   "scripts": {
     "sketch": "node fuse.js",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "dist-os": "node fuse.js dist-open-processing"
   }
 }
