@@ -21,6 +21,7 @@
   "scripts": {
     "sketch": "node fuse.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "postinstall": "node fuse.js dist",
     "dist-os": "node fuse.js dist-open-processing"
   }
 }
