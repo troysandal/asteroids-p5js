@@ -1,2 +1,2 @@
-release: node fuse.js dist-heroku
+release: npm run build-heroku
 web: npm run serve
