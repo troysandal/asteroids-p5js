@@ -13,7 +13,7 @@ context(class {
       homeDir: 'src',
       output: 'dist/$name.js',
       sourceMaps: true,
-      globals: { p5: 'p5' },
+      // globals: { p5: 'p5' },
       plugins: [
         WebIndexPlugin({
           template: "index.html",
@@ -54,6 +54,13 @@ task('clean', async (context) => {
 task("default", ['clean'], async (context) => {
   const fuse = context.getConfig()
   context.createBundle(fuse, '> asteroids.ts +lodash +p5')
+  await fuse.run()
+})
+
+task("dist-heroku", ['clean'], async (context) => {
+  context.isProduction = true
+  const fuse = context.getConfig()
+  context.createBundle(fuse, '> asteroids.ts lodash +p5')
   await fuse.run()
 })
 

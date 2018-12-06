@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.16.4",
     "lodash": "^4.17.10",
     "p5": "^0.6.1"
   },
@@ -21,7 +22,8 @@
   "scripts": {
     "sketch": "node fuse.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "postinstall": "node fuse.js dist",
+    "postinstall": "node fuse.js dist-heroku",
+    "serve": "node serve.js",
     "dist-os": "node fuse.js dist-open-processing"
   }
 }

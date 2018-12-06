@@ -1,7 +1,7 @@
 import Sounds from "./Sounds"
 import Game from './Game'
 import {Globals} from './Globals'
-import 'p5'
+const p5 = require('p5')
 
 const sketch = (p:p5) => {
     Globals.p = p
