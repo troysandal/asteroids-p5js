@@ -6,6 +6,7 @@
     "express": "^4.16.4",
     "fuse-box": "^3.2.2",
     "lodash": "^4.17.10",
+    "typescript": "^2.9.2",
     "p5": "^0.6.1"
   },
   "devDependencies": {
@@ -15,7 +16,6 @@
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "ts-node": "^6.1.1",
-    "typescript": "^2.9.2",
     "uglify-es": "^3.3.9",
     "uglify-js": "^3.4.0"
   },
