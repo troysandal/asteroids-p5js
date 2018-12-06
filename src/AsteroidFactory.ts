@@ -88,7 +88,7 @@ export default class AsteroidFactory {
         const x:number[] = []
         const y:number[] = []
 
-        for (const i:number = 0 ; i < points.length ; i++) {
+        for (let i:number = 0 ; i < points.length ; i++) {
             x[i] = points[i][0];
             y[i] = points[i][1];
         }
