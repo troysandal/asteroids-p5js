@@ -22,7 +22,6 @@
   "scripts": {
     "sketch": "node fuse.js",
     "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "postinstall": "node fuse.js dist-heroku",
     "serve": "node serve.js",
     "dist-os": "node fuse.js dist-open-processing"
   }
