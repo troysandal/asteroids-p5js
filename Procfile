@@ -1,2 +1,1 @@
-release: npm run build-heroku
-web: npm run serve
+web: node serve.js
